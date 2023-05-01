@@ -1,11 +1,11 @@
 import React from 'react';
-import {Box} from "@mantine/core";
+import {JobSearch} from "./p1-jobSearch/JobSearch";
 
 export const PageBody = () => {
     return (
-        <Box>
-            PageBody
-        </Box>
+        <>
+          <JobSearch/>
+        </>
     );
 };
 

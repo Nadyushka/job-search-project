@@ -29,13 +29,11 @@ const useStyles = createStyles((theme) => ({
     },
 
     mainWrapper: {
-        height: '100%',
         maxWidth: `${rem(1116)}`,
         margin: '0px auto',
         border: 'none',
         display: "flex",
         justifyContent: "space-between",
-        flexWrap: 'wrap',
     },
 
     mainTitle:{

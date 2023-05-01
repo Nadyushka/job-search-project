@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useState} from 'react';
 import {
     Box,
     Button,
@@ -98,6 +98,7 @@ const useStyles = createStyles((theme) => ({
         backgroundColor: 'white',
         margin: '40px 0px 0px 0px',
         border: '1px solid #EAEBED',
+        height: '100%'
     },
 
     filterTitle: {
