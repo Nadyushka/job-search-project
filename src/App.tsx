@@ -1,26 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {HeaderSimple} from "./3-UI/u1-components/c2-features/f1-header/Header";
+import { Main } from '3-UI/u1-components/c2-features/f2-main/Main';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+            <HeaderSimple links={[{link: 'vacancySearch', label: 'Поиск Вакансий'}, {
+                link: 'saved',
+                label: 'Избранное'
+            }]}/>
+
+            <Main/>
+        </div>
+    );
 }
 
 export default App;
