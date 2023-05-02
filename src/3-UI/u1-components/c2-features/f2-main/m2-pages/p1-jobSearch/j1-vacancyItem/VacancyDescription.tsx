@@ -48,7 +48,7 @@ export const VacancyDescription = ({responsibilities, requirements, conditions}:
 const useStyles = createStyles((theme) => ({
 
     vacancyContainer: {
-        width: `773px`,
+        maxWidth: `773px`,
         backgroundColor: '#FFFFFF',
         padding: '4px 0px 24px',
         border: '1px solid #EAEBED',
@@ -68,7 +68,7 @@ const useStyles = createStyles((theme) => ({
 
         ul: {
             padding: '0px 24px 0px 24px',
-            width: `725px`,
+            maxWidth: `725px`,
 
             li: {
                 fontFamily: 'Inter, sans-serif',
@@ -81,7 +81,7 @@ const useStyles = createStyles((theme) => ({
                     width: `100%`,
                     span: {
                         display: "inline-block",
-                        width: `700px`,
+                        maxWidth: `700px`,
                         wordWrap: 'break-word',
                     }
                 }

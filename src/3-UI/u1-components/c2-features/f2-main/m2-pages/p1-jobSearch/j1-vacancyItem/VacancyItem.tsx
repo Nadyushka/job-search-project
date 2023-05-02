@@ -39,7 +39,7 @@ export const VacancyItem = ({id, name, salary, type, place, marked}: PropsType) 
 
 const useStyles = createStyles((theme) => ({
     vacancyItemContainer: {
-        width: `773px`,
+        maxWidth: `773px`,
         backgroundColor: '#FFFFFF',
         margin: '16px 0px 0px 0px',
         padding: '24px 0px',

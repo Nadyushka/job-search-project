@@ -1,8 +1,7 @@
-import React, { useState} from 'react';
+import React, {useState} from 'react';
 import {
     Box,
     Button,
-    CloseButton,
     Container,
     createStyles,
     getStylesRef,
@@ -12,6 +11,7 @@ import {
     Title
 } from "@mantine/core";
 import {ChevronDown, ChevronUp} from 'tabler-icons-react';
+import crossIcon from '3-UI/u2-assets/cross.svg'
 
 export const Filters = () => {
 
@@ -24,8 +24,8 @@ export const Filters = () => {
             <Box className={classes.filterTitle}>
                 <Title className={classes.filterTitleText} order={2}>Фильтры</Title>
                 <Button className={classes.filterTitleButton}>Сбросить данные
-                    <CloseButton className={classes.filterTitleButtonCross} size={'xs'} style={{width: '16px'}}
-                                 aria-label="Close modal"/></Button>
+                    <div className={classes.filterTitleButtonCross} />
+                </Button>
             </Box>
             <Select
                 className={classes.vacancyAriaSelect}
@@ -98,7 +98,12 @@ const useStyles = createStyles((theme) => ({
         backgroundColor: 'white',
         margin: '40px 0px 0px 0px',
         border: '1px solid #EAEBED',
-        height: '100%'
+        height: '100%',
+
+        [`@media (max-width: ${rem(800)})`]: {
+            flex: '1 1 100%',
+        },
+
     },
 
     filterTitle: {
@@ -107,6 +112,10 @@ const useStyles = createStyles((theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'baseline',
+
+        [`@media (max-width: ${rem(800)})`]: {
+            flex: '1 1 100%',
+        },
     },
 
     filterTitleText: {
@@ -133,8 +142,7 @@ const useStyles = createStyles((theme) => ({
             backgroundColor: 'white',
 
             [`.${getStylesRef('filterTitleButtonCross')}`]: {
-                color: '#92C1FF',
-                backgroundColor: 'white',
+                backgroundColor: '#92C1FF',
             },
         },
 
@@ -143,17 +151,24 @@ const useStyles = createStyles((theme) => ({
             backgroundColor: 'white',
 
             [`.${getStylesRef('filterTitleButtonCross')}`]: {
-                color: '#5E96FC',
-                backgroundColor: 'white',
+                backgroundColor: '#5E96FC',
             },
         },
 
     },
+    // filterTitleButtonCross: {
+    //     ref: getStylesRef('filterTitleButtonCross'),
+    //     backgroundColor: 'white',
+    //     color: '#ACADB9',
+    //     textAlign: "start",
+    // },
+
     filterTitleButtonCross: {
         ref: getStylesRef('filterTitleButtonCross'),
-        backgroundColor: 'white',
-        color: '#ACADB9',
-        textAlign: "start",
+        width: '16px',
+        height: '16px',
+        backgroundColor: '#ACADB9',
+        mask: `url(${crossIcon}) no-repeat center`,
     },
 
     vacancyAriaSelect: {

@@ -34,21 +34,27 @@ export const JobSearch = () => {
 
 const useStyles = createStyles((theme) => ({
     jobSearchContainer: {
-        width: `773px`,
+        flex: '1 1 65%',
+        maxWidth: `773px`,
         backgroundColor: '#F7F7F8',
         margin: '40px 0px 0px 28px',
         padding: '0px',
         position: 'relative',
+
+        [`@media (max-width: ${rem(1160)})`]: {
+            flex: '1 1 48%',
+        },
+
     },
 
     inputJobName: {
-        width: `773px`,
+        width: `100%`,
         background: '#FFFFFF',
         border: '1px solid #EAEBED',
         borderRadius: '8px',
 
         input: {
-            width: `773px`,
+            width: `100%`,
             paddingLeft: '36px !important',
 
             '&:placeholder': {

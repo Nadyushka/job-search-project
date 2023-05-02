@@ -10,12 +10,12 @@ export const Main = () => {
 
     return (
         <Container className={classes.mainContainer}>
-            {/*<Box className={classes.mainWrapper}>*/}
-            {/*    <Title order={1} className={classes.mainTitle}>Job search</Title>*/}
-            {/*    <Filters/>*/}
-            {/*    <PageBody/>*/}
-            {/*</Box>*/}
-            <Vacancy key={30} type={'full-time'} id={30} marked={true} place={'Minsk'} salary={'25000'} name={'Менеджер'}/>
+            <Box className={classes.mainWrapper}>
+                <Title order={1} className={classes.mainTitle}>Job search</Title>
+                <Filters/>
+                <PageBody/>
+            </Box>
+            {/*<Vacancy key={30} type={'full-time'} id={30} marked={true} place={'Minsk'} salary={'25000'} name={'Менеджер'}/>*/}
         </Container>
     );
 };
@@ -37,6 +37,7 @@ const useStyles = createStyles((theme) => ({
         border: 'none',
         display: "flex",
         justifyContent: "space-between",
+        flexWrap: 'wrap',
     },
 
     mainTitle:{
