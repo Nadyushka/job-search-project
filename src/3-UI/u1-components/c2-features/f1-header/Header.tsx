@@ -2,12 +2,17 @@ import {useState} from 'react';
 import {createStyles, Header, Container, Burger, Group, rem, Box} from '@mantine/core';
 import appIcon from '3-UI/u2-assets/appIcon.svg'
 import {useDisclosure} from '@mantine/hooks';
+import {useNavigate} from 'react-router-dom'
+import { PATH } from '3-UI/u1-components/c3-commonComponents/routes/Routes';
 
 interface HeaderSimpleProps {
     links: { link: string; label: string }[];
 }
 
 export function HeaderSimple({links}: HeaderSimpleProps) {
+
+    const navigate = useNavigate()
+
     const [opened, {toggle}] = useDisclosure(false);
     const [active, setActive] = useState(links[0].link);
     const {classes, cx} = useStyles();
@@ -20,6 +25,7 @@ export function HeaderSimple({links}: HeaderSimpleProps) {
             onClick={(event) => {
                 event.preventDefault();
                 setActive(link.link);
+                navigate(link.link === 'vacancySearch' ? PATH.VACANCY_SEARCH : PATH.SELECTED_VACANCIES)
             }}
         >
             {link.label}

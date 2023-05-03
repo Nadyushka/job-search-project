@@ -156,12 +156,6 @@ const useStyles = createStyles((theme) => ({
         },
 
     },
-    // filterTitleButtonCross: {
-    //     ref: getStylesRef('filterTitleButtonCross'),
-    //     backgroundColor: 'white',
-    //     color: '#ACADB9',
-    //     textAlign: "start",
-    // },
 
     filterTitleButtonCross: {
         ref: getStylesRef('filterTitleButtonCross'),

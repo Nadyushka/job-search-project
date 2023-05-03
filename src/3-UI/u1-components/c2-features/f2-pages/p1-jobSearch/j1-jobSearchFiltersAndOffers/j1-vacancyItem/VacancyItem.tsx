@@ -3,6 +3,8 @@ import {Box, Container, createStyles, rem, Text, Title} from "@mantine/core";
 import selectedStar from '3-UI/u2-assets/selectedStar.svg'
 import notSelectedStar from '3-UI/u2-assets/notSelectedStar.svg'
 import locationIcon from '3-UI/u2-assets/locationIcon.svg'
+import {NavLink, useNavigate} from "react-router-dom";
+import {PATH} from '3-UI/u1-components/c3-commonComponents/routes/Routes';
 
 type PropsType = {
     id: number
@@ -16,23 +18,31 @@ type PropsType = {
 export const VacancyItem = ({id, name, salary, type, place, marked}: PropsType) => {
 
     const {classes, cx} = useStyles();
+    const navigate = useNavigate()
+
+    // const onClickVacancyHandler = () => {
+    //     navigate(
+    //         `${PATH.ACTIVE_VACANCY}/${id}`, {state: {id, name, salary, type, place, marked}});
+    // }
 
     return (
         <Container className={classes.vacancyItemContainer}>
-            <Box className={classes.vacancyItemInfo}>
-                <Title className={classes.vacancyItemContainerTitle} order={3}>{name}</Title>
-                {marked ? <img className={classes.vacancyItemSelectImg} src={selectedStar}/> :
-                    <img className={classes.vacancyItemSelectImg} src={notSelectedStar}/>}
-            </Box>
-            <Text className={classes.vacancyItemDescription} span>
-                з/п от {salary} rub
-                <div/>
-                <Text span>{type}</Text>
-            </Text>
-            <Box className={classes.vacancyItemInfoPlace}>
-                <img src={locationIcon}/>
-                <Text>{place}</Text>
-            </Box>
+            <NavLink to={`/vacancySearch/${id}`}>
+                <Box className={classes.vacancyItemInfo}>
+                    <Title className={classes.vacancyItemContainerTitle} order={3}>{name}</Title>
+                    {marked ? <img className={classes.vacancyItemSelectImg} src={selectedStar}/> :
+                        <img className={classes.vacancyItemSelectImg} src={notSelectedStar}/>}
+                </Box>
+                <Text className={classes.vacancyItemDescription} span>
+                    з/п от {salary} rub
+                    <div/>
+                    <Text span>{type}</Text>
+                </Text>
+                <Box className={classes.vacancyItemInfoPlace}>
+                    <img src={locationIcon}/>
+                    <Text>{place}</Text>
+                </Box>
+            </NavLink>
         </Container>
     );
 };
@@ -46,12 +56,29 @@ const useStyles = createStyles((theme) => ({
         border: '1px solid #EAEBED',
         borderRadius: `${rem(12)}`,
         textAlign: 'left',
+        cursor: 'pointer',
+
+        a: {
+            textDecoration: 'none',
+            color: '#232134',
+
+            '&:hover div': {
+                textDecoration: 'none',
+                color: '#232134',
+            },
+
+            '&:active div': {
+                textDecoration: 'none',
+                color: '#232134',
+            },
+        },
     },
 
     vacancyItemInfo: {
         marginLeft: '24px',
         display: 'flex',
         justifyContent: 'space-between',
+
     },
 
     vacancyItemContainerTitle: {

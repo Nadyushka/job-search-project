@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import {HeaderSimple} from "./3-UI/u1-components/c2-features/f1-header/Header";
-import { Main } from '3-UI/u1-components/c2-features/f2-main/Main';
+import {RoutesComponent} from "./3-UI/u1-components/c3-commonComponents/routes/Routes";
 
 function App() {
     return (
@@ -10,8 +10,7 @@ function App() {
                 link: 'saved',
                 label: 'Избранное'
             }]}/>
-
-            <Main/>
+            <RoutesComponent/>
         </div>
     );
 }

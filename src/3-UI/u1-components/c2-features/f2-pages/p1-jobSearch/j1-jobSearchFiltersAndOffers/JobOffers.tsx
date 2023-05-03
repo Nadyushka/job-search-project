@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {Search} from 'tabler-icons-react';
 import {VacancyItem} from "./j1-vacancyItem/VacancyItem";
 
-export const JobSearch = () => {
+export const JobOffers = () => {
 
     const {classes, cx} = useStyles();
     const [activePage, setPage] = useState<number>(1);
@@ -27,7 +27,7 @@ export const JobSearch = () => {
                                  marked={j.marked}/>
                 )
             })}
-            <Pagination className={classes.jobSearchPagination} value={activePage} onChange={setPage} total={10}/>
+            <Pagination className={classes.jobSearchPagination} value={activePage} onChange={setPage} total={3}/>
         </Container>
     );
 };
@@ -85,5 +85,9 @@ const useStyles = createStyles((theme) => ({
         justifyContent: 'center',
         marginTop: '40px',
         marginBottom: '44px',
+
+        [`@media (max-width: ${rem(400)})`]: {
+            flexDirection: 'column',
+        },
     }
 }))
