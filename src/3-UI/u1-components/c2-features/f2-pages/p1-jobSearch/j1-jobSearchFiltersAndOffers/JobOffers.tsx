@@ -24,7 +24,7 @@ export const JobOffers = () => {
             {tempJob.map((j) => {
                 return (
                     <VacancyItem key={j.id} id={j.id} name={j.name} salary={j.salary} type={j.type} place={j.place}
-                                 marked={j.marked}/>
+                                 marked={j.marked} showSelectedVacancy={false}/>
                 )
             })}
             <Pagination className={classes.jobSearchPagination} value={activePage} onChange={setPage} total={3}/>

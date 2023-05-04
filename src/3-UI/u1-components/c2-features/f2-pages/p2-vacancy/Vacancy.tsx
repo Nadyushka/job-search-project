@@ -2,27 +2,17 @@ import React from 'react';
 import {Container, createStyles} from "@mantine/core";
 import {VacancyItem} from "../p1-jobSearch/j1-jobSearchFiltersAndOffers/j1-vacancyItem/VacancyItem";
 import {VacancyDescription} from "../p1-jobSearch/j1-jobSearchFiltersAndOffers/j1-vacancyItem/VacancyDescription";
-import {useLocation} from "react-router-dom";
-
-type LocationType = {
-    id: number
-    name: string
-    salary: string
-    type: string
-    place: string
-    marked: boolean
-}
-
+import {useParams} from "react-router-dom";
 
 export const Vacancy = () => {
 
     const {classes, cx} = useStyles();
 
-    // const {id, name, salary, type, marked, place} = useLocation().state as LocationType;
+    const params = useParams<{ selectedVacancyId: string }>()
 
     return (
         <Container className={classes.vacancyContainer}>
-            <VacancyItem id={1} name={'name'} salary={'salary'} type={'type'} place={'place'} marked={true}/>
+            <VacancyItem id={1} name={'name'} salary={'salary'} type={'type'} place={'place'} marked={true} showSelectedVacancy={true}/>
             <VacancyDescription responsibilities={[
                ' Разработка дизайн-макетов для наружной, интерьерной рекламы, полиграфии, сувенирной продукции.',
                ' Подготовка и вёрстка макетов в CorelDraw, Adobe photoshop.',

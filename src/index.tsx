@@ -6,28 +6,32 @@ import reportWebVitals from './reportWebVitals';
 import {Global, MantineProvider} from '@mantine/core';
 import bold from '3-UI/u3-styles/fonts/OpenSans-Bold.ttf'
 import {HashRouter} from "react-router-dom";
+import {Provider} from "react-redux";
+import {store} from "./2-BLL/store";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <HashRouter>
-        <MantineProvider theme={{colorScheme: 'light', fontFamily: 'Inter, sans-serif'}}>
-            <Global
-                styles={[
-                    {
-                        '@font-face': {
-                            fontFamily: 'Open Sans',
-                            src: `url('${bold}') format("ttf")`,
-                            fontWeight: 700,
-                            fontStyle: 'normal',
+    <Provider store={store}>
+        <HashRouter>
+            <MantineProvider theme={{colorScheme: 'light', fontFamily: 'Inter, sans-serif'}}>
+                <Global
+                    styles={[
+                        {
+                            '@font-face': {
+                                fontFamily: 'Open Sans',
+                                src: `url('${bold}') format("ttf")`,
+                                fontWeight: 700,
+                                fontStyle: 'normal',
+                            },
                         },
-                    },
-                ]}
-            />
-            <App/>
-        </MantineProvider>
-    </HashRouter>
+                    ]}
+                />
+                <App/>
+            </MantineProvider>
+        </HashRouter>
+    </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,10 +1,10 @@
 import React from 'react';
+import {MouseEvent, useState} from 'react';
 import {Box, Container, createStyles, rem, Text, Title} from "@mantine/core";
 import selectedStar from '3-UI/u2-assets/selectedStar.svg'
 import notSelectedStar from '3-UI/u2-assets/notSelectedStar.svg'
 import locationIcon from '3-UI/u2-assets/locationIcon.svg'
-import {NavLink, useNavigate} from "react-router-dom";
-import {PATH} from '3-UI/u1-components/c3-commonComponents/routes/Routes';
+import {useNavigate} from "react-router-dom";
 
 type PropsType = {
     id: number
@@ -12,37 +12,43 @@ type PropsType = {
     salary: string
     type: string
     place: string
-    marked: boolean
+    marked: boolean,
+    showSelectedVacancy: boolean
 }
 
-export const VacancyItem = ({id, name, salary, type, place, marked}: PropsType) => {
+export const VacancyItem = ({id, name, salary, type, place, marked, showSelectedVacancy}: PropsType) => {
 
     const {classes, cx} = useStyles();
     const navigate = useNavigate()
 
-    // const onClickVacancyHandler = () => {
-    //     navigate(
-    //         `${PATH.ACTIVE_VACANCY}/${id}`, {state: {id, name, salary, type, place, marked}});
-    // }
+    const [mark, setMark] = useState<boolean>(marked)
+
+    const onClickVacancyHandler = () => !showSelectedVacancy && navigate(`/vacancySearch/${id}`);
+
+    const toggleSelectVacancies = (e: MouseEvent<HTMLImageElement>) => {
+        e.stopPropagation();
+        setMark(!mark)
+    }
+
 
     return (
-        <Container className={classes.vacancyItemContainer}>
-            <NavLink to={`/vacancySearch/${id}`}>
-                <Box className={classes.vacancyItemInfo}>
-                    <Title className={classes.vacancyItemContainerTitle} order={3}>{name}</Title>
-                    {marked ? <img className={classes.vacancyItemSelectImg} src={selectedStar}/> :
-                        <img className={classes.vacancyItemSelectImg} src={notSelectedStar}/>}
-                </Box>
-                <Text className={classes.vacancyItemDescription} span>
-                    з/п от {salary} rub
-                    <div/>
-                    <Text span>{type}</Text>
-                </Text>
-                <Box className={classes.vacancyItemInfoPlace}>
-                    <img src={locationIcon}/>
-                    <Text>{place}</Text>
-                </Box>
-            </NavLink>
+        <Container className={classes.vacancyItemContainer} onClick={onClickVacancyHandler}>
+            <Box className={classes.vacancyItemInfo}>
+                <Title className={classes.vacancyItemContainerTitle} order={3}>{name}</Title>
+                <img className={classes.vacancyItemSelectImg}
+                     src={mark ? selectedStar : notSelectedStar}
+                     onClick={toggleSelectVacancies}
+                />
+            </Box>
+            <Text className={classes.vacancyItemDescription} span>
+                з/п от {salary} rub
+                <div/>
+                <Text span>{type}</Text>
+            </Text>
+            <Box className={classes.vacancyItemInfoPlace}>
+                <img src={locationIcon}/>
+                <Text>{place}</Text>
+            </Box>
         </Container>
     );
 };
