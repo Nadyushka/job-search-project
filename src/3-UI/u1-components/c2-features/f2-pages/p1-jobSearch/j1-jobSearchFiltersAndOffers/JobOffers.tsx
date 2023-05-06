@@ -1,33 +1,51 @@
 import {Box, Button, Container, createStyles, Pagination, rem, TextInput} from '@mantine/core';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Search} from 'tabler-icons-react';
 import {VacancyItem} from "./j1-vacancyItem/VacancyItem";
+import {useAppDispatch, useAppSelector} from "../../../../../../2-BLL/store";
+import {setVacanciesDataTC} from "../../../../../../2-BLL/vacanciesReducer";
 
 export const JobOffers = () => {
 
     const {classes, cx} = useStyles();
     const [activePage, setPage] = useState<number>(1);
 
-    const tempJob = [
-        {id: 1, name: 'Менеджер-дизайнер', salary: '100000', type: 'full-time', place: 'Новый Уренгой', marked: true},
-        {id: 2, name: 'Менеджер', salary: '10000', type: 'part-time', place: 'Minsk', marked: false},
-        {id: 3, name: 'Менеджер', salary: '10000', type: 'part-time', place: 'Minsk', marked: false}]
+    const dispatch = useAppDispatch()
+    const vacancies = useAppSelector(state => state.vacancies.vacanciesData.objects)
+    const error = useAppSelector(state => state.vacancies.error)
+    const totalVacancies = useAppSelector(state => state.vacancies.vacanciesData.total)
+    const pagesCount = useAppSelector(state => state.vacancies.pageCount)
+
+    const totalPages = totalVacancies / pagesCount
+
+    useEffect(() => {
+        dispatch(setVacanciesDataTC(activePage, pagesCount))
+    }, [activePage])
+
+    console.log(vacancies)
+    console.log(activePage)
 
     return (
         <Container className={classes.jobSearchContainer}>
-
+            <div>{error}</div>
             <TextInput className={classes.inputJobName}
                        size={'lg'}
                        placeholder="Введите название вакансии"
                        icon={<Search size="1rem"/>}
                        rightSection={<Button size="sm">Поиск</Button>}/>
-            {tempJob.map((j) => {
+            {vacancies.map((j) => {
                 return (
-                    <VacancyItem key={j.id} id={j.id} name={j.name} salary={j.salary} type={j.type} place={j.place}
-                                 marked={j.marked} showSelectedVacancy={false}/>
+                    <VacancyItem key={j.id} id={j.id} name={j.firm_name}
+                                 salary={j.payment_from}
+                                 curruency={j.currency}
+                                 type={j.type_of_work.title}
+                                 place={j.town.title}
+                                 marked={false} showSelectedVacancy={false}/>
                 )
             })}
-            <Pagination className={classes.jobSearchPagination} value={activePage} onChange={setPage} total={3}/>
+            <Pagination className={classes.jobSearchPagination}
+                        value={activePage}
+                        onChange={setPage} total={totalPages}/>
         </Container>
     );
 };

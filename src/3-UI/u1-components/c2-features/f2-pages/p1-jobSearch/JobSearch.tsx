@@ -1,21 +1,30 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Filters} from "./j1-jobSearchFiltersAndOffers/Filters";
 import {Container, createStyles, rem, Title} from "@mantine/core";
 import {JobOffers} from './j1-jobSearchFiltersAndOffers/JobOffers';
-import {useAppSelector} from "../../../../../2-BLL/store";
+import {useAppDispatch, useAppSelector} from "../../../../../2-BLL/store";
 import {useNavigate} from "react-router-dom";
 import {PATH} from "../../../c3-commonComponents/routes/Routes";
+
 
 export const JobSearch = () => {
 
     const {classes, cx} = useStyles();
 
-    const navigate = useNavigate()
+
+
     const isAuthorised = useAppSelector((state) => state.auth.isAuthorised)
 
-    if (!isAuthorised) {
-        navigate(PATH.LOGIN)
-    }
+    const navigate = useNavigate()
+
+    useEffect(()=> {
+        if (!isAuthorised) {
+            navigate(PATH.LOGIN)
+        }
+
+    }, [])
+
+
 
     return (
         <Container className={classes.jobSearchContainer}>

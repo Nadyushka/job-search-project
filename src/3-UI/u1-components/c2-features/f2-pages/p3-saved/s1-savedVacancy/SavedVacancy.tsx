@@ -35,7 +35,7 @@ export const SavedVacancy = () => {
         <Container className={classes.selectedVacancyContainer}>
             {selectedVacancies.map(v=> {
                 return (
-                    <VacancyItem key={v.id} id={v.id} name={v.name} salary={v.salary} type={v.type} place={v.place} showSelectedVacancy={false} marked={true}/>
+                    <VacancyItem key={v.id} id={v.id} name={v.name} curruency={'rub'} salary={1000} type={v.type} place={v.place} showSelectedVacancy={false} marked={true}/>
                 )
             })}
             <Pagination className={classes.jobSearchPagination} value={activePage} onChange={setPage} total={3}/>

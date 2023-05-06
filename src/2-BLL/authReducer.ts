@@ -1,15 +1,8 @@
 import {AppThunk} from "./store";
 import {authApi} from "../1-DAL/authApi";
 import axios from "axios";
+import {errorHandler} from "../3-UI/u2-assets/utilits/error";
 
-
-type userAuthDataType = {
-    "access_token": string,
-    "refresh_token": string,
-    "ttl": number | null,
-    "expires_in": number | null,
-    "token_type": string,
-}
 
 const initialState = {
     isAuthorised: false,
@@ -41,6 +34,22 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
     }
 }
 
+
+export const authorisedWithPasswordTC = (login: string, password: string, client_id: number, client_secret: string, hr: number = 0): AppThunk => async (dispatch) => {
+    dispatch(isLoadingAC(true))
+    dispatch(setErrorAC(''))
+    try {
+        let res = await authApi.authorisedWithPassword(login, password, client_id, client_secret, hr)
+        dispatch(setUserDataAC(res.data))
+    } catch (e) {
+        errorHandler(e, dispatch)
+    } finally {
+        dispatch(isLoadingAC(false))
+    }
+}
+
+//actions
+
 export const isLoadingAC = (isLoading: boolean) => ({type: 'job-search/auth/isLoading', isLoading} as const)
 export const isAuthorisedAC = (isAuthorised: boolean) => ({type: 'job-search/auth/isAuthorised', isAuthorised} as const)
 export const setErrorAC = (error: string) => ({type: 'job-search/auth/setError', error} as const)
@@ -49,6 +58,8 @@ export const setUserDataAC = (userAuthData: userAuthDataType) => ({
     userAuthData
 } as const)
 
+//types
+
 type ActionsTypes = isLoadingACType | isAuthorisedACType | setErrorType | setAuthUserDataType
 
 type isLoadingACType = ReturnType<typeof isLoadingAC>
@@ -56,23 +67,10 @@ type isAuthorisedACType = ReturnType<typeof isAuthorisedAC>
 type setErrorType = ReturnType<typeof setErrorAC>
 type setAuthUserDataType = ReturnType<typeof setUserDataAC>
 
-type ErrorType = {
-    error: string
-}
-
-export const authorisedWithPasswordTC = (login: string, password: string, client_id: number, client_secret: string, hr: number = 0): AppThunk => async (dispatch) => {
-    dispatch(isLoadingAC(true))
-    try {
-        let res = await authApi.authorisedWithPassword(login, password, client_id, client_secret, hr)
-        dispatch(setUserDataAC(res.data))
-    } catch (e) {
-        if (axios.isAxiosError<ErrorType>(e)) {
-            const error = e.response?.data ? e.response.data.error : e.message
-            dispatch(setErrorAC(error))
-        } else {
-            dispatch(setErrorAC('Some error'))
-        }
-    } finally {
-        dispatch(isLoadingAC(false))
-    }
+type userAuthDataType = {
+    "access_token": string,
+    "refresh_token": string,
+    "ttl": number | null,
+    "expires_in": number | null,
+    "token_type": string,
 }

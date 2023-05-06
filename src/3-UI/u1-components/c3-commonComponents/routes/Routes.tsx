@@ -7,7 +7,7 @@ import {Login} from "../../c2-features/f2-pages/p0-login/Login";
 
 export const PATH = {
     VACANCY_SEARCH: '/vacancySearch',
-    ACTIVE_VACANCY: '/vacancySearch/:selectedVacancyId?',
+    ACTIVE_VACANCY: '/selectedVacancy/:id',
     SELECTED_VACANCIES: '/selectedVacancies',
     LOGIN: '/login',
 }
@@ -38,6 +38,7 @@ const useStyles = createStyles((theme) => ({
         border: 'none',
         backgroundColor: '#F7F7F8',
         paddingBottom: '51px',
-        height: '100vh',
+        height: '100%',
+        minHeight: '78vh',
     },
 }))

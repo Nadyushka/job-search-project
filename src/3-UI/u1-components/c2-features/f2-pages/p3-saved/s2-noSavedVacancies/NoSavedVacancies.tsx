@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Container, createStyles, Image, rem, Text} from "@mantine/core";
-import noVacanciesFoundImg from '3-UI/u2-assets/noVacanciesFoundIcon.svg'
+import noVacanciesFoundImg from '3-UI/u2-assets/pictures/noVacanciesFoundIcon.svg'
 
 export const NoSavedVacancies = () => {
 

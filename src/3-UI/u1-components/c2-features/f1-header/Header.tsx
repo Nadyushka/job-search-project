@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {createStyles, Header, Container, Burger, Group, rem, Box} from '@mantine/core';
-import appIcon from '3-UI/u2-assets/appIcon.svg'
+import appIcon from '3-UI/u2-assets/pictures/appIcon.svg'
 import {useDisclosure} from '@mantine/hooks';
 import {useNavigate} from 'react-router-dom'
 import { PATH } from '3-UI/u1-components/c3-commonComponents/routes/Routes';

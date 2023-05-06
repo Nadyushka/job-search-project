@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -11,26 +11,37 @@ import {
     Title
 } from "@mantine/core";
 import {ChevronDown, ChevronUp} from 'tabler-icons-react';
-import crossIcon from '3-UI/u2-assets/cross.svg'
+import crossIcon from '3-UI/u2-assets/pictures/cross.svg'
+import {setCatalogueDataTC} from "../../../../../../2-BLL/vacanciesReducer";
+import {useAppDispatch, useAppSelector} from "../../../../../../2-BLL/store";
 
 export const Filters = () => {
 
-    const {classes, cx} = useStyles();
+    const dispatch = useAppDispatch()
+    const catalogueDataText = useAppSelector(state => state.vacancies.catalogueData).map(c => c['title_rus'])
+
     const [searchValue, onSearchChange] = useState<string>('');
     const [vacancyAriaSelectOpen, setVacancyAriaSelectOpen] = useState<boolean>(false);
+
+    const {classes, cx} = useStyles();
+
+    useEffect(() => {
+        dispatch(setCatalogueDataTC())
+    }, [])
 
     return (
         <Container className={classes.filtersContainer}>
             <Box className={classes.filterTitle}>
                 <Title className={classes.filterTitleText} order={2}>Фильтры</Title>
                 <Button className={classes.filterTitleButton}>Сбросить данные
-                    <div className={classes.filterTitleButtonCross} />
+                    <div className={classes.filterTitleButtonCross}/>
                 </Button>
             </Box>
             <Select
                 className={classes.vacancyAriaSelect}
                 onClick={() => setVacancyAriaSelectOpen(!vacancyAriaSelectOpen)}
                 onBlur={() => setVacancyAriaSelectOpen(false)}
+
 
                 size={'md'}
                 label="Отрасль"
@@ -40,7 +51,7 @@ export const Filters = () => {
                 onSearchChange={onSearchChange}
                 searchValue={searchValue}
                 nothingFound="Проверьте выбранную отрасль"
-                data={['IT, интернет, связь, телеком', 'Кадры, управление персоналом', 'Искусство, культура, развлечения', 'Банки, инвестиции, лизинг', 'Дизайн', 'Водитель', 'Стажер']}
+                data={catalogueDataText}
                 maxDropdownHeight={188}
                 transitionProps={{transition: 'pop-top-left', duration: 80, timingFunction: 'ease'}}
                 rightSection={!vacancyAriaSelectOpen ?

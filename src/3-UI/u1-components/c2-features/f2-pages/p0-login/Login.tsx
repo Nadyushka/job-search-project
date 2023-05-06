@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
     Box,
     Button,
     Container,
     createStyles,
     Group,
-    Input,
     Loader,
     PasswordInput,
     rem,
@@ -17,6 +16,8 @@ import {useAppDispatch, useAppSelector} from "../../../../../2-BLL/store";
 import {authorisedWithPasswordTC} from "../../../../../2-BLL/authReducer";
 import {PATH} from "../../../c3-commonComponents/routes/Routes";
 import {useNavigate} from "react-router-dom";
+import {LoaderComponent} from "../../../c3-commonComponents/loader/Loader";
+import {ErrorComponent} from "../../../c3-commonComponents/error/ErrorComponent";
 
 export const Login = () => {
 
@@ -26,6 +27,7 @@ export const Login = () => {
 
     const isAuthorised = useAppSelector((state) => state.auth.isAuthorised)
     const isLoading = useAppSelector((state) => state.auth.isLoading)
+    const error = useAppSelector((state) => state.auth.error)
 
     const form = useForm({
         initialValues: {
@@ -47,13 +49,13 @@ export const Login = () => {
         if (isAuthorised) {
             navigate(PATH.VACANCY_SEARCH)
         }
-    }, [isAuthorised])
+    }, [isAuthorised, navigate])
 
 
     return (
         <Container className={classes.loginContainer}>
-            {isLoading && <Loader variant="dots"/>}
             <Box className={classes.loginBox}>
+                {isLoading && <LoaderComponent/>}
                 <Title order={2}>Login</Title>
                 <form
                     onSubmit={form.onSubmit((values) => dispatch(authorisedWithPasswordTC(values.email, values.password, 2356, 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948')))}>
@@ -74,6 +76,7 @@ export const Login = () => {
                     </Group>
                 </form>
             </Box>
+            <ErrorComponent error={error}/>
         </Container>
     );
 };
@@ -84,12 +87,15 @@ const useStyles = createStyles((theme) => ({
         margin: '20px auto !important',
         padding: '24px',
         border: 'none',
+
     },
 
     loginBox: {
         backgroundColor: 'white',
         marginTop: '40px',
         padding: '20px 30px',
+        borderRadius: '20px',
+        position: 'relative',
 
         h2: {
             marginTop: '10px',
@@ -106,10 +112,10 @@ const useStyles = createStyles((theme) => ({
                     marginTop: '10px',
                 }
             }
-
         },
 
         button: {
+
             '&:hover': {
                 backgroundColor: '#92C1FF',
             },

@@ -1,29 +1,30 @@
 import React from 'react';
 import {MouseEvent, useState} from 'react';
 import {Box, Container, createStyles, rem, Text, Title} from "@mantine/core";
-import selectedStar from '3-UI/u2-assets/selectedStar.svg'
-import notSelectedStar from '3-UI/u2-assets/notSelectedStar.svg'
-import locationIcon from '3-UI/u2-assets/locationIcon.svg'
+import selectedStar from '3-UI/u2-assets/pictures/selectedStar.svg'
+import notSelectedStar from '3-UI/u2-assets/pictures/notSelectedStar.svg'
+import locationIcon from '3-UI/u2-assets/pictures/locationIcon.svg'
 import {useNavigate} from "react-router-dom";
 
 type PropsType = {
     id: number
     name: string
-    salary: string
+    salary: number
     type: string
     place: string
     marked: boolean,
     showSelectedVacancy: boolean
+    curruency: string
 }
 
-export const VacancyItem = ({id, name, salary, type, place, marked, showSelectedVacancy}: PropsType) => {
+export const VacancyItem = ({id, name, salary, curruency, type, place, marked, showSelectedVacancy}: PropsType) => {
 
     const {classes, cx} = useStyles();
     const navigate = useNavigate()
 
     const [mark, setMark] = useState<boolean>(marked)
 
-    const onClickVacancyHandler = () => !showSelectedVacancy && navigate(`/vacancySearch/${id}`);
+    const onClickVacancyHandler = () => !showSelectedVacancy && navigate(`/selectedVacancy/${id}`);
 
     const toggleSelectVacancies = (e: MouseEvent<HTMLImageElement>) => {
         e.stopPropagation();
@@ -41,7 +42,7 @@ export const VacancyItem = ({id, name, salary, type, place, marked, showSelected
                 />
             </Box>
             <Text className={classes.vacancyItemDescription} span>
-                з/п от {salary} rub
+                з/п от {salary} {curruency}
                 <div/>
                 <Text span>{type}</Text>
             </Text>
