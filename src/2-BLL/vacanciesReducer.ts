@@ -1,6 +1,6 @@
 import {AppThunk} from "./store";
 import {ResponseTypeCatalogues, ResponseTypeVacancies, vacancyApi, VacancyInfo} from "1-DAL/vacanciesAPI";
-import {errorHandler} from "../3-UI/u2-assets/utilits/error";
+import {errorHandler} from "3-UI/u2-assets/utilits/error";
 
 const initialState = {
     isLoading: false,
@@ -14,8 +14,8 @@ const initialState = {
     },
     vacancyData: {
         "id": 0,
-        "payment_from": 0,
-        "payment_to": 0,
+        "payment_from": '',
+        "payment_to": '',
         "profession": '',
         "currency": 'rub',
         "type_of_work": {
@@ -33,6 +33,10 @@ const initialState = {
     } as VacancyInfo,
     currentPage: 1,
     pageCount: 3,
+    payment_from: '' as number | '',
+    payment_to: '' as number | '',
+    jobArea: '',
+    keyWord: '',
 }
 
 type InitialStateType = typeof initialState
@@ -60,6 +64,15 @@ export const vacanciesReducer = (state: InitialStateType = initialState, action:
                 ...state,
                 currentPage: action.page
             }
+        case "job-search/vacancies/setFilters":
+            return {
+                ...state,
+                payment_to: action.payment_to!,
+                payment_from: action.payment_from!,
+                keyWord: action.keyword!,
+                jobArea: action.catalogues!,
+                currentPage: 1,
+            }
         default:
             return state
     }
@@ -72,21 +85,43 @@ export const setCatalogueDataTC = (): AppThunk => async (dispatch) => {
         let res = await vacancyApi.getCatalogues()
         dispatch(setCatalogueDataAC(res.data))
     } catch (e) {
-        errorHandler(e, dispatch)
+        errorHandler(e, dispatch, setErrorVacancyAC)
     } finally {
         dispatch(isLoadingAC(false))
     }
 }
 
-export const setVacanciesDataTC = (currentPage: number, count: number, published?: number, keyword?: string, payment_from?: string, payment_to?: string, catalogues?: string): AppThunk => async (dispatch, getState) => {
+export const setVacanciesDataTC = (currentPage: number, count: number,): AppThunk => async (dispatch, getState) => {
     dispatch(isLoadingAC(true))
-    console.log(currentPage)
     const token = getState().auth.userAuthData.access_token
     try {
-        let res = await vacancyApi.getVacancies(token, currentPage, count, published, keyword, payment_from, payment_to, catalogues)
+        let res = await vacancyApi.getVacancies(token, currentPage, count)
         dispatch(setVacanciesDataAC(res.data))
     } catch (e) {
-        errorHandler(e, dispatch)
+        errorHandler(e, dispatch, setErrorVacancyAC)
+    } finally {
+        dispatch(isLoadingAC(false))
+    }
+}
+
+export const setFiltredVacanciesDataTC = (currentPage: number, count: number, published?: number, keyword?: string | '', payment_from?: number | '', payment_to?: number | '', catalogues?: string | ''): AppThunk => async (dispatch, getState) => {
+    dispatch(isLoadingAC(true))
+    const token = getState().auth.userAuthData.access_token
+    const catalogueID = getState().vacancies.catalogueData.find(c => c.title_rus === catalogues)!.key.toString()
+    try {
+        let res = await vacancyApi.getFiltredVacancies(token, {
+            page: currentPage,
+            count,
+            published,
+            keyword,
+            payment_from,
+            payment_to,
+            catalogues: catalogueID
+        })
+        dispatch(setFiltersAC(keyword, payment_from, payment_to, catalogues))
+        dispatch(setVacanciesDataAC(res.data))
+    } catch (e) {
+        errorHandler(e, dispatch, setErrorVacancyAC)
     } finally {
         dispatch(isLoadingAC(false))
     }
@@ -99,7 +134,7 @@ export const setVacancyDataTC = (id: number): AppThunk => async (dispatch, getSt
         let res = await vacancyApi.getVacancy(id, token)
         dispatch(setVacancyDataAC(res.data))
     } catch (e) {
-        errorHandler(e, dispatch)
+        errorHandler(e, dispatch, setErrorVacancyAC)
     } finally {
         dispatch(isLoadingAC(false))
     }
@@ -107,24 +142,29 @@ export const setVacancyDataTC = (id: number): AppThunk => async (dispatch, getSt
 
 // actions
 
-export const isLoadingAC = (isLoading: boolean) => ({type: 'job-search/auth/isLoading', isLoading} as const)
-export const setErrorAC = (error: string) => ({type: 'job-search/auth/setError', error} as const)
-export const setCatalogueDataAC = (catalogueData: ResponseTypeCatalogues[]) => ({
+const isLoadingAC = (isLoading: boolean) => ({type: 'job-search/auth/isLoading', isLoading} as const)
+const setErrorVacancyAC = (error: string) => ({type: 'job-search/auth/setError', error} as const)
+const setCatalogueDataAC = (catalogueData: ResponseTypeCatalogues[]) => ({
     type: 'job-search/vacancies/setCatalogueData',
     catalogueData
 } as const)
-export const setVacanciesDataAC = (vacanciesData: ResponseTypeVacancies) => ({
+const setVacanciesDataAC = (vacanciesData: ResponseTypeVacancies) => ({
     type: 'job-search/vacancies/setVacanciesData',
     vacanciesData
 } as const)
-export const setVacancyDataAC = (vacancyData: VacancyInfo) => ({
+const setVacancyDataAC = (vacancyData: VacancyInfo) => ({
     type: 'job-search/vacancies/setVacancyData',
     vacancyData
 } as const)
-export const setPageInfoAC = (page: number) => ({
+const setPageInfoAC = (page: number) => ({
     type: 'job-search/vacancies/setPageInfo',
     page
 } as const)
+export const setFiltersAC = (keyword?: string | '', payment_from?: number | '', payment_to?: number | '', catalogues?: string | '') => ({
+    type: 'job-search/vacancies/setFilters',
+    payment_from, payment_to, catalogues, keyword
+} as const)
+
 
 // types
 
@@ -135,10 +175,12 @@ type ActionsTypes =
     | setVacanciesDataType
     | setVacancyDataType
     | setPageInfoType
+    | setFiltersType
 
 type isLoadingACType = ReturnType<typeof isLoadingAC>
-type setErrorType = ReturnType<typeof setErrorAC>
+type setErrorType = ReturnType<typeof setErrorVacancyAC>
 type setCatalogueDataType = ReturnType<typeof setCatalogueDataAC>
 type setVacanciesDataType = ReturnType<typeof setVacanciesDataAC>
 type setVacancyDataType = ReturnType<typeof setVacancyDataAC>
 type setPageInfoType = ReturnType<typeof setPageInfoAC>
+type setFiltersType = ReturnType<typeof setFiltersAC>

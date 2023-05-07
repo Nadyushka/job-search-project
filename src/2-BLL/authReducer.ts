@@ -35,14 +35,21 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
 }
 
 
+type ErrorType = {
+    error: {
+        code: string,
+        message: string
+    }
+}
+
 export const authorisedWithPasswordTC = (login: string, password: string, client_id: number, client_secret: string, hr: number = 0): AppThunk => async (dispatch) => {
     dispatch(isLoadingAC(true))
-    dispatch(setErrorAC(''))
+    dispatch(setErrorAuthAC(''))
     try {
         let res = await authApi.authorisedWithPassword(login, password, client_id, client_secret, hr)
         dispatch(setUserDataAC(res.data))
     } catch (e) {
-        errorHandler(e, dispatch)
+        errorHandler(e, dispatch, setErrorAuthAC)
     } finally {
         dispatch(isLoadingAC(false))
     }
@@ -50,10 +57,10 @@ export const authorisedWithPasswordTC = (login: string, password: string, client
 
 //actions
 
-export const isLoadingAC = (isLoading: boolean) => ({type: 'job-search/auth/isLoading', isLoading} as const)
-export const isAuthorisedAC = (isAuthorised: boolean) => ({type: 'job-search/auth/isAuthorised', isAuthorised} as const)
-export const setErrorAC = (error: string) => ({type: 'job-search/auth/setError', error} as const)
-export const setUserDataAC = (userAuthData: userAuthDataType) => ({
+const isLoadingAC = (isLoading: boolean) => ({type: 'job-search/auth/isLoading', isLoading} as const)
+const isAuthorisedAC = (isAuthorised: boolean) => ({type: 'job-search/auth/isAuthorised', isAuthorised} as const)
+const setErrorAuthAC = (error: string) => ({type: 'job-search/auth/setError', error} as const)
+const setUserDataAC = (userAuthData: userAuthDataType) => ({
     type: 'job-search/auth/setUserData',
     userAuthData
 } as const)
@@ -64,7 +71,7 @@ type ActionsTypes = isLoadingACType | isAuthorisedACType | setErrorType | setAut
 
 type isLoadingACType = ReturnType<typeof isLoadingAC>
 type isAuthorisedACType = ReturnType<typeof isAuthorisedAC>
-type setErrorType = ReturnType<typeof setErrorAC>
+type setErrorType = ReturnType<typeof setErrorAuthAC>
 type setAuthUserDataType = ReturnType<typeof setUserDataAC>
 
 type userAuthDataType = {

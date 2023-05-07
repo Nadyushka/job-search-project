@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {Container, createStyles, TypographyStylesProvider} from "@mantine/core";
 import {VacancyItem} from "../p1-jobSearch/j1-jobSearchFiltersAndOffers/j1-vacancyItem/VacancyItem";
-import {VacancyDescription} from "../p1-jobSearch/j1-jobSearchFiltersAndOffers/j1-vacancyItem/VacancyDescription";
 import {useParams} from "react-router-dom";
 import {setVacancyDataTC} from "../../../../../2-BLL/vacanciesReducer";
 import {useAppDispatch, useAppSelector} from "../../../../../2-BLL/store";
@@ -23,7 +22,7 @@ export const Vacancy = () => {
     return (
         <Container className={classes.vacancyContainer}>
 
-            <VacancyItem id={itemData.id} name={itemData.firm_name} salary={itemData.payment_from}
+            <VacancyItem id={itemData.id} professionName={itemData.profession} salary={itemData.payment_from}
                          curruency={itemData.currency} type={itemData.type_of_work.title} place={itemData.town.title}
                          marked={true}
                          showSelectedVacancy={true}/>

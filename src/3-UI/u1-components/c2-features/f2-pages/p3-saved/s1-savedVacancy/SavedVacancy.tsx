@@ -1,31 +1,30 @@
 import {Container, createStyles, Pagination, rem} from '@mantine/core';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {VacancyItem} from "../../p1-jobSearch/j1-jobSearchFiltersAndOffers/j1-vacancyItem/VacancyItem";
 import {NoSavedVacancies} from "../s2-noSavedVacancies/NoSavedVacancies";
-
-
-type VacancyType = {
-    id: number
-    name: string
-    salary: string
-    type: string
-    place: string
-    marked: boolean
-}
-
-type PropsType = {
-    selectedVacancies: VacancyType[]
-}
+import {PATH} from "../../../../c3-commonComponents/routes/Routes";
+import {useAppSelector} from "../../../../../../2-BLL/store";
+import {useNavigate} from "react-router-dom";
 
 export const SavedVacancy = () => {
 
     const {classes, cx} = useStyles();
     const [activePage, setPage] = useState<number>(1);
 
+    const navigate = useNavigate()
+    const isAuthorised = useAppSelector((state) => state.auth.isAuthorised)
+
     const selectedVacancies =   [
         {id: 1, name: 'Менеджер-дизайнер', salary: '100000', type: 'full-time', place: 'Новый Уренгой', marked: true},
         {id: 2, name: 'Менеджер', salary: '10000', type: 'part-time', place: 'Minsk', marked: false},
         {id: 3, name: 'Менеджер', salary: '10000', type: 'part-time', place: 'Minsk', marked: false}]
+
+
+    useEffect(()=> {
+        if (!isAuthorised) {
+            navigate(PATH.LOGIN)
+        }
+    }, [])
 
     if (selectedVacancies.length === 0) {
         return <NoSavedVacancies/>
@@ -35,7 +34,7 @@ export const SavedVacancy = () => {
         <Container className={classes.selectedVacancyContainer}>
             {selectedVacancies.map(v=> {
                 return (
-                    <VacancyItem key={v.id} id={v.id} name={v.name} curruency={'rub'} salary={1000} type={v.type} place={v.place} showSelectedVacancy={false} marked={true}/>
+                    <VacancyItem key={v.id} id={v.id} professionName={v.name} curruency={'rub'} salary={1000} type={v.type} place={v.place} showSelectedVacancy={false} marked={true}/>
                 )
             })}
             <Pagination className={classes.jobSearchPagination} value={activePage} onChange={setPage} total={3}/>

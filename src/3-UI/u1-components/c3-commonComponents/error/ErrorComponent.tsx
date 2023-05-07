@@ -1,32 +1,32 @@
-import {Container, createStyles, rem} from '@mantine/core';
+import {Container, createStyles, keyframes, rem} from '@mantine/core';
 import React, {useCallback, useEffect, useState} from 'react';
+import {errorHandler} from "../../../u2-assets/utilits/error";
 
 type PropsType = {
-    error: string
+    errorMessage: string
 }
 
-export const ErrorComponent = ({error}: PropsType) => {
+export const ErrorComponent = ({errorMessage}: PropsType) => {
 
     const {classes, cx} = useStyles();
-    const [errorText, setErrorTex] = useState<string>(error)
+    const [visible, setVisible] = useState<boolean>(true)
 
     const closeError = useCallback(() => {
-        setErrorTex('')
-    }, [errorText])
+        setVisible(false)
+    }, [])
 
     useEffect(() => {
+        setVisible(true)
         setTimeout(() => {
             closeError()
         }, 6000)
-    }, [closeError, errorText])
+    }, [closeError, errorMessage])
 
-    if (errorText.length === 0) return null
+    if (!visible) return null
 
     return (
-        <Container
-            className={classes.errorContainer}
-        >
-            {error}
+        <Container className={errorMessage.length !== 0 ? classes.errorContainer : ''}>
+            {errorMessage}
         </Container>
     );
 };
@@ -42,12 +42,30 @@ const useStyles = createStyles((theme) => ({
         padding: '10px 20px',
         color: 'red',
         display: 'flex',
-        justifyContent:'center',
-        alignItems: 'center'
+        justifyContent: 'center',
+        alignItems: 'center',
+        animation: `${bounce}`,
+        animationDuration: '6s',
     },
-
-    // errorVisible: {
-    //     bottom: '50px',
-    //     transition: '0.5s all',
-    // }
 }))
+
+const bounce = keyframes({
+        'from, 20%, 53%, 80%, to': {transform: 'translate3d(0, 0, 0)'},
+        '0%': {
+            transform: 'translateY(80px)',
+            opacity: 0,
+        },
+        '10%': {
+            transform: 'translateY(0)',
+            opacity: 1,
+        },
+        '90%': {
+            transform: 'translateY(0)',
+            opacity: 1,
+        },
+        '100%': {
+            transform: 'translateY(80px)',
+            opacity: 0.3,
+        }
+    })
+;

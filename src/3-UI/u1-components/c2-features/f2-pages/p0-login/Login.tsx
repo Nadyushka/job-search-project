@@ -51,6 +51,7 @@ export const Login = () => {
         }
     }, [isAuthorised, navigate])
 
+    console.log(error)
 
     return (
         <Container className={classes.loginContainer}>
@@ -76,7 +77,7 @@ export const Login = () => {
                     </Group>
                 </form>
             </Box>
-            <ErrorComponent error={error}/>
+            <ErrorComponent errorMessage={error}/>
         </Container>
     );
 };
@@ -87,7 +88,6 @@ const useStyles = createStyles((theme) => ({
         margin: '20px auto !important',
         padding: '24px',
         border: 'none',
-
     },
 
     loginBox: {

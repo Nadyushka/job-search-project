@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     Box,
     Button,
@@ -12,28 +12,48 @@ import {
 } from "@mantine/core";
 import {ChevronDown, ChevronUp} from 'tabler-icons-react';
 import crossIcon from '3-UI/u2-assets/pictures/cross.svg'
-import {setCatalogueDataTC} from "../../../../../../2-BLL/vacanciesReducer";
-import {useAppDispatch, useAppSelector} from "../../../../../../2-BLL/store";
+import {setFiltersAC, setFiltredVacanciesDataTC, setVacanciesDataTC} from "2-BLL/vacanciesReducer";
+import {useAppDispatch, useAppSelector} from "2-BLL/store";
 
 export const Filters = () => {
 
     const dispatch = useAppDispatch()
     const catalogueDataText = useAppSelector(state => state.vacancies.catalogueData).map(c => c['title_rus'])
+    const currentPage = useAppSelector(state => state.vacancies.currentPage)
+    const count = useAppSelector(state => state.vacancies.pageCount)
+    const paymentFrom = useAppSelector(state => state.vacancies.payment_from)
+    const paymentTo = useAppSelector(state => state.vacancies.payment_to)
+    const jobArea = useAppSelector(state => state.vacancies.jobArea)
+    const keyWord = useAppSelector(state => state.vacancies.keyWord)
 
-    const [searchValue, onSearchChange] = useState<string>('');
+    const [jobAreaValue, setJobAreaValue] = useState<string>(jobArea);
+    const [minSalaryValue, setMinSalaryValue] = useState<number | ''>(paymentFrom === '' ? '' : paymentFrom);
+    const [maxSalaryValue, setMaxSalaryValue] = useState<number | ''>(paymentTo === '' ? '' : paymentFrom);
+
     const [vacancyAriaSelectOpen, setVacancyAriaSelectOpen] = useState<boolean>(false);
 
     const {classes, cx} = useStyles();
 
-    useEffect(() => {
-        dispatch(setCatalogueDataTC())
-    }, [])
+    const selectDataAttribute = {'data-elem': 'industry-select'}
+    const minSalaryInputDataAttribute = {'data-elem': 'salary-from-input'}
+    const maxSalaryInputDataAttribute = {'data-elem': 'salary-to-input'}
+    const useFiltersDataAttribute = {'data-elem': 'search-button'}
+
+    const onClickButtonHandler = () => {
+        dispatch(setFiltredVacanciesDataTC(1, count, 1, keyWord, minSalaryValue, maxSalaryValue, jobAreaValue))
+    }
+
+    const onClockClearFiltersButton = () => {
+        dispatch(setFiltersAC('', '', '', ''))
+        dispatch(setVacanciesDataTC(1, count))
+    }
 
     return (
         <Container className={classes.filtersContainer}>
             <Box className={classes.filterTitle}>
                 <Title className={classes.filterTitleText} order={2}>Фильтры</Title>
-                <Button className={classes.filterTitleButton}>Сбросить данные
+                <Button className={classes.filterTitleButton}
+                        onClick={onClockClearFiltersButton} {...useFiltersDataAttribute}>Сбросить данные
                     <div className={classes.filterTitleButtonCross}/>
                 </Button>
             </Box>
@@ -41,15 +61,13 @@ export const Filters = () => {
                 className={classes.vacancyAriaSelect}
                 onClick={() => setVacancyAriaSelectOpen(!vacancyAriaSelectOpen)}
                 onBlur={() => setVacancyAriaSelectOpen(false)}
-
-
                 size={'md'}
                 label="Отрасль"
                 placeholder="Выберете отрасль "
                 searchable
                 clearable
-                onSearchChange={onSearchChange}
-                searchValue={searchValue}
+                onSearchChange={setJobAreaValue}
+                searchValue={jobAreaValue}
                 nothingFound="Проверьте выбранную отрасль"
                 data={catalogueDataText}
                 maxDropdownHeight={188}
@@ -58,7 +76,6 @@ export const Filters = () => {
                     <ChevronDown style={{color: '#ACADB9'}} size={'1rem'}/> :
                     <ChevronUp style={{color: '#5E96FC'}} size={'1rem'}/>}
                 rightSectionWidth={48}
-
                 styles={(theme) => ({
                     rightSection: {pointerEvents: 'none'},
                     item: {
@@ -79,7 +96,7 @@ export const Filters = () => {
                         },
                     },
                 })}
-
+                {...selectDataAttribute}
             />
             <Box>
                 <NumberInput
@@ -88,15 +105,23 @@ export const Filters = () => {
                     styles={{control: {border: 'none'}}}
                     className={classes.salaryInput}
                     min={0}
+                    value={minSalaryValue}
+                    onChange={setMinSalaryValue}
+                    step={1000}
+                    {...minSalaryInputDataAttribute}
                 />
                 <NumberInput
                     placeholder="До"
                     styles={{control: {border: 'none'}}}
                     className={`${classes.salaryInput}  ${classes.salaryInputMax}`}
                     min={0}
+                    value={maxSalaryValue}
+                    onChange={setMaxSalaryValue}
+                    step={1000}
+                    {...maxSalaryInputDataAttribute}
                 />
             </Box>
-            <Button className={classes.filterButton}>Применить</Button>
+            <Button onClick={onClickButtonHandler} className={classes.filterButton}>Применить</Button>
         </Container>
     );
 };

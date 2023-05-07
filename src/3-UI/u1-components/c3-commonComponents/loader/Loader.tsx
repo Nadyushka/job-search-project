@@ -29,7 +29,7 @@ const useStyles = createStyles((theme) => ({
         alignItems: 'center',
         zIndex: 100,
         backgroundColor: 'RGB(224, 224, 224, 0.5)',
-        borderRadius: '20px',
+        borderRadius: '5px',
     },
 
 

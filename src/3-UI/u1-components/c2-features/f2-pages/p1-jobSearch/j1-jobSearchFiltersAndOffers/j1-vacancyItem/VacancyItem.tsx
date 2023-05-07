@@ -8,8 +8,8 @@ import {useNavigate} from "react-router-dom";
 
 type PropsType = {
     id: number
-    name: string
-    salary: number
+    professionName: string
+    salary: number | ""
     type: string
     place: string
     marked: boolean,
@@ -17,12 +17,23 @@ type PropsType = {
     curruency: string
 }
 
-export const VacancyItem = ({id, name, salary, curruency, type, place, marked, showSelectedVacancy}: PropsType) => {
+export const VacancyItem = ({
+                                id,
+                                professionName,
+                                salary,
+                                curruency,
+                                type,
+                                place,
+                                marked,
+                                showSelectedVacancy
+                            }: PropsType) => {
 
     const {classes, cx} = useStyles();
     const navigate = useNavigate()
 
     const [mark, setMark] = useState<boolean>(marked)
+    const vacancyIdDataAttribute = {'data-elem': `vacancy-${id}`}
+    const vacancyIdButtonDataAttribute = {'data-elem': `vacancy-${id}-shortlist-button`}
 
     const onClickVacancyHandler = () => !showSelectedVacancy && navigate(`/selectedVacancy/${id}`);
 
@@ -33,16 +44,17 @@ export const VacancyItem = ({id, name, salary, curruency, type, place, marked, s
 
 
     return (
-        <Container className={classes.vacancyItemContainer} onClick={onClickVacancyHandler}>
+        <Container className={classes.vacancyItemContainer} onClick={onClickVacancyHandler} {...vacancyIdDataAttribute}>
             <Box className={classes.vacancyItemInfo}>
-                <Title className={classes.vacancyItemContainerTitle} order={3}>{name}</Title>
+                <Title className={classes.vacancyItemContainerTitle} order={3}>{professionName}</Title>
                 <img className={classes.vacancyItemSelectImg}
                      src={mark ? selectedStar : notSelectedStar}
                      onClick={toggleSelectVacancies}
+                    data-elem = {`vacancy-${id}-shortlist-button`}
                 />
             </Box>
             <Text className={classes.vacancyItemDescription} span>
-                з/п от {salary} {curruency}
+                {salary !== 0 ? `з/п от ${salary} ${curruency}` : 'з/п не указана'}
                 <div/>
                 <Text span>{type}</Text>
             </Text>

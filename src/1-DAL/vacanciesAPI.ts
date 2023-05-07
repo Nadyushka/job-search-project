@@ -13,16 +13,21 @@ export const vacancyApi = {
     getCatalogues() {
         return instance.get<ResponseTypeCatalogues[]>('catalogues')
     },
-    getVacancies(token: string, page: number , count: number = 3, published?: number, keyword?: string, payment_from?: string, payment_to?: string, catalogues?: string) {
+    getVacancies(token: string, page: number, count: number = 3) {
         const params = {
             page,
             count,
             'Authorization': `Bearer ${token}`,
-            published,
-            keyword,
-            payment_from,
-            payment_to,
-            catalogues
+        }
+        return instance.get<ResponseTypeVacancies>('vacancies', {params})
+    },
+
+    getFiltredVacancies(token: string, paramData: { page: number, count: number, published?: number, keyword?: string, payment_from?: number | '', payment_to?: number | '', catalogues?: string }) {
+        const params = {
+            ...paramData,
+            'order_field': 'payment',
+            'order_direction': 'desc',
+            'Authorization': `Bearer ${token}`,
         }
         return instance.get<ResponseTypeVacancies>('vacancies', {params})
     }
@@ -48,8 +53,8 @@ export type ResponseTypeVacancies = {
 
 export type VacancyInfo = {
     "id": number,
-    "payment_from": number,
-    "payment_to": number,
+    "payment_from": number | '',
+    "payment_to": number | '',
     "profession": string,
     "currency": 'rub' | 'uah' | 'uzs',
     "type_of_work": {

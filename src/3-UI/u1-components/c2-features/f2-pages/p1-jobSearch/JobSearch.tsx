@@ -5,32 +5,28 @@ import {JobOffers} from './j1-jobSearchFiltersAndOffers/JobOffers';
 import {useAppDispatch, useAppSelector} from "../../../../../2-BLL/store";
 import {useNavigate} from "react-router-dom";
 import {PATH} from "../../../c3-commonComponents/routes/Routes";
+import {setCatalogueDataTC, setFiltredVacanciesDataTC} from "../../../../../2-BLL/vacanciesReducer";
 
 
 export const JobSearch = () => {
 
-    const {classes, cx} = useStyles();
-
-
-
+    const navigate = useNavigate()
     const isAuthorised = useAppSelector((state) => state.auth.isAuthorised)
 
-    const navigate = useNavigate()
+    const {classes, cx} = useStyles();
 
     useEffect(()=> {
         if (!isAuthorised) {
             navigate(PATH.LOGIN)
         }
-
     }, [])
-
-
 
     return (
         <Container className={classes.jobSearchContainer}>
             <Title order={1} className={classes.mainTitle}>Job search</Title>
             <Filters/>
             <JobOffers/>
+
         </Container>
     );
 };
