@@ -80,6 +80,7 @@ export const vacanciesReducer = (state: InitialStateType = initialState, action:
 
 
 export const setCatalogueDataTC = (): AppThunk => async (dispatch) => {
+
     dispatch(isLoadingAC(true))
     try {
         let res = await vacancyApi.getCatalogues()

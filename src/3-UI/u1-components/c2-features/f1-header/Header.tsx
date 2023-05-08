@@ -1,8 +1,8 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {createStyles, Header, Container, Burger, Group, rem, Box} from '@mantine/core';
 import appIcon from '3-UI/u2-assets/pictures/appIcon.svg'
 import {useDisclosure} from '@mantine/hooks';
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import { PATH } from '3-UI/u1-components/c3-commonComponents/routes/Routes';
 
 interface HeaderSimpleProps {
@@ -16,6 +16,14 @@ export function HeaderSimple({links}: HeaderSimpleProps) {
     const [opened, {toggle}] = useDisclosure(false);
     const [active, setActive] = useState(links[0].link);
     const {classes, cx} = useStyles();
+
+    const {pathname} = useLocation()
+
+   useEffect(()=>{
+       pathname === PATH.VACANCY_SEARCH && setActive(links[0].link)
+       pathname === PATH.SELECTED_VACANCIES && setActive(links[1].link)
+       pathname === PATH.NO_SELECTED_VACANCIES && setActive(links[1].link)
+   },[pathname])
 
     const items = links.map((link) => (
         <a

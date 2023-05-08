@@ -5,6 +5,8 @@ import selectedStar from '3-UI/u2-assets/pictures/selectedStar.svg'
 import notSelectedStar from '3-UI/u2-assets/pictures/notSelectedStar.svg'
 import locationIcon from '3-UI/u2-assets/pictures/locationIcon.svg'
 import {useNavigate} from "react-router-dom";
+import {addVacancyToSelectedTC, removeVacancyFromSelectionTC} from "2-BLL/selectedVacanciesReducer";
+import {useAppDispatch, useAppSelector} from "2-BLL/store";
 
 type PropsType = {
     id: number
@@ -31,13 +33,19 @@ export const VacancyItem = ({
     const {classes, cx} = useStyles();
     const navigate = useNavigate()
 
+    const dispatch = useAppDispatch()
+    const currentPage = useAppSelector((state) => state.selectedVacancies.currentPage)
+    const pageCount = useAppSelector((state) => state.selectedVacancies.pageCount)
+
+
     const [mark, setMark] = useState<boolean>(marked)
     const vacancyIdDataAttribute = {'data-elem': `vacancy-${id}`}
-    const vacancyIdButtonDataAttribute = {'data-elem': `vacancy-${id}-shortlist-button`}
 
     const onClickVacancyHandler = () => !showSelectedVacancy && navigate(`/selectedVacancy/${id}`);
 
     const toggleSelectVacancies = (e: MouseEvent<HTMLImageElement>) => {
+      if(showSelectedVacancy) {dispatch(removeVacancyFromSelectionTC(id, currentPage, pageCount))}
+      if(!showSelectedVacancy && marked) {dispatch(addVacancyToSelectedTC(id, professionName, salary, curruency, type, place))}
         e.stopPropagation();
         setMark(!mark)
     }

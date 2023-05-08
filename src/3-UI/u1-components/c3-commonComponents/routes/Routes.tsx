@@ -4,11 +4,13 @@ import {Vacancy} from "../../c2-features/f2-pages/p2-vacancy/Vacancy";
 import {SavedVacancy} from "../../c2-features/f2-pages/p3-saved/s1-savedVacancy/SavedVacancy";
 import {createStyles, rem, Container} from "@mantine/core";
 import {Login} from "../../c2-features/f2-pages/p0-login/Login";
+import {NoSavedVacancies} from "../../c2-features/f2-pages/p3-saved/s2-noSavedVacancies/NoSavedVacancies";
 
 export const PATH = {
     VACANCY_SEARCH: '/vacancySearch',
     ACTIVE_VACANCY: '/selectedVacancy/:id',
     SELECTED_VACANCIES: '/selectedVacancies',
+    NO_SELECTED_VACANCIES: '/selectedVacancies/noSelectedVacancies',
     LOGIN: '/login',
 }
 
@@ -25,6 +27,7 @@ export const RoutesComponent = () => {
                 <Route path={PATH.VACANCY_SEARCH} element={<JobSearch/>}/>
                 <Route path={PATH.ACTIVE_VACANCY} element={<Vacancy/>}/>
                 <Route path={PATH.SELECTED_VACANCIES} element={<SavedVacancy/>}/>
+                <Route path={PATH.NO_SELECTED_VACANCIES} element={<NoSavedVacancies/>}/>
             </Routes>
         </Container>
     )

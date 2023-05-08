@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import {useForm} from '@mantine/form';
 import {useAppDispatch, useAppSelector} from "../../../../../2-BLL/store";
-import {authorisedWithPasswordTC} from "../../../../../2-BLL/authReducer";
+import {authorisedWithPasswordTC, refreshTokenTC} from "../../../../../2-BLL/authReducer";
 import {PATH} from "../../../c3-commonComponents/routes/Routes";
 import {useNavigate} from "react-router-dom";
 import {LoaderComponent} from "../../../c3-commonComponents/loader/Loader";
@@ -77,6 +77,9 @@ export const Login = () => {
                     </Group>
                 </form>
             </Box>
+            <Group position="center" mt="md">
+                <Button disabled={isLoading} onClick={()=>dispatch(refreshTokenTC())}>Refresh Token</Button>
+            </Group>
             <ErrorComponent errorMessage={error}/>
         </Container>
     );

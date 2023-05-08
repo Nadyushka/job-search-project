@@ -4,11 +4,15 @@ import {VacancyItem} from "../p1-jobSearch/j1-jobSearchFiltersAndOffers/j1-vacan
 import {useParams} from "react-router-dom";
 import {setVacancyDataTC} from "../../../../../2-BLL/vacanciesReducer";
 import {useAppDispatch, useAppSelector} from "../../../../../2-BLL/store";
+import {LoaderComponent} from "../../../c3-commonComponents/loader/Loader";
+import {ErrorComponent} from "../../../c3-commonComponents/error/ErrorComponent";
 
 export const Vacancy = () => {
 
     const dispatch = useAppDispatch()
     const itemData = useAppSelector(state => state.vacancies.vacancyData)
+    const isLoading = useAppSelector(state => state.vacancies.isLoading)
+    const error = useAppSelector(state => state.vacancies.error)
 
     const {classes, cx} = useStyles();
 
@@ -21,6 +25,7 @@ export const Vacancy = () => {
 
     return (
         <Container className={classes.vacancyContainer}>
+            {isLoading && <LoaderComponent/>}
 
             <VacancyItem id={itemData.id} professionName={itemData.profession} salary={itemData.payment_from}
                          curruency={itemData.currency} type={itemData.type_of_work.title} place={itemData.town.title}
@@ -29,21 +34,8 @@ export const Vacancy = () => {
             <TypographyStylesProvider className={classes.vacancyInfo}>
                 <div dangerouslySetInnerHTML={{ __html: itemData.vacancyRichText }} />
             </TypographyStylesProvider>
-            {/*<VacancyDescription responsibilities={[*/}
-            {/*    ' Разработка дизайн-макетов для наружной, интерьерной рекламы, полиграфии, сувенирной продукции.',*/}
-            {/*    ' Подготовка и вёрстка макетов в CorelDraw, Adobe photoshop.',*/}
-            {/*    'Создание дизайна логотипов и брендбуков',*/}
-            {/*    ' Управленческая функция: обучение, адаптация дизайнеров, их контроль, оценка']}*/}
-            {/*                    requirements={[*/}
-            {/*                        'Собеседование – после успешного прохождения тестового задания',*/}
-            {/*                        'Рассматриваются кандидаты только с опытом работы',*/}
-            {/*                        'Обязательно - наличие портфолио',*/}
-            {/*                        'Умение самостоятельно принимать решения, умение объективно оценивать свою работу, работать в режиме многозадачности и переключаться с одного задания к другому и планировать свой день. Соблюдать сроки.',*/}
-            {/*                        'Ответственный, исполнительный, целеустремленный, большим плюсом будет опыт управления']}*/}
-            {/*                    conditions={['Оформление по контракту',*/}
-            {/*                        'Полный социальный пакет',*/}
-            {/*                        'Премирование по результатам работы']}*/}
-            {/*/>*/}
+
+            <ErrorComponent errorMessage={error}/>
         </Container>
     );
 };
@@ -55,6 +47,7 @@ const useStyles = createStyles((theme) => ({
         margin: '0px auto',
         padding: '20px 0px 0px 0px',
         height: '100%',
+        position: 'relative',
     },
 
     vacancyInfo : {

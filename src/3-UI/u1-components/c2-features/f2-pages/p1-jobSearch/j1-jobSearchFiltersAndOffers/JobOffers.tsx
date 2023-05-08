@@ -2,12 +2,12 @@ import {Box, Button, Container, createStyles, Pagination, rem, TextInput} from '
 import React, {useEffect, useState} from 'react';
 import {Search} from 'tabler-icons-react';
 import {VacancyItem} from "./j1-vacancyItem/VacancyItem";
-import {useAppDispatch, useAppSelector} from "../../../../../../2-BLL/store";
+import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
     setCatalogueDataTC, setFiltersAC,
     setFiltredVacanciesDataTC,
     setVacanciesDataTC
-} from "../../../../../../2-BLL/vacanciesReducer";
+} from "2-BLL/vacanciesReducer";
 import {LoaderComponent} from "../../../../c3-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../../c3-commonComponents/error/ErrorComponent";
 
@@ -35,13 +35,13 @@ export const JobOffers = () => {
     const useKeyWordDataAttribute = {'data-elem': 'search-button'}
 
     useEffect(() => {
-        dispatch(setCatalogueDataTC())
-        if (jobArea) {
-
+        if (jobArea.length !== 0) {
             dispatch(setFiltredVacanciesDataTC(activePage, pagesCount, 1, kewWordValue, paymentFrom, paymentTo, jobArea))
         } else {
+            dispatch(setCatalogueDataTC())
             dispatch(setVacanciesDataTC(activePage, pagesCount))
         }
+        kewWord === '' && setKewWordValue('')
     }, [activePage, paymentFrom, paymentTo, jobArea, kewWord])
 
     const pageOnClickHandler = () => {

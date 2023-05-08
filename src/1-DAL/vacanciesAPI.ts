@@ -18,6 +18,7 @@ export const vacancyApi = {
             page,
             count,
             'Authorization': `Bearer ${token}`,
+            published: 1,
         }
         return instance.get<ResponseTypeVacancies>('vacancies', {params})
     },
@@ -68,5 +69,6 @@ export type VacancyInfo = {
         "genitive": string
     },
     "firm_name": string,
-    vacancyRichText: string
+    vacancyRichText: string,
+    marked: boolean
 }

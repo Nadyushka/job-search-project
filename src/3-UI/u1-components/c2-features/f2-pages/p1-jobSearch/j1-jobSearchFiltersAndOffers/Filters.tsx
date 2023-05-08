@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -17,6 +17,8 @@ import {useAppDispatch, useAppSelector} from "2-BLL/store";
 
 export const Filters = () => {
 
+    // dispatch  и данные из стейта
+
     const dispatch = useAppDispatch()
     const catalogueDataText = useAppSelector(state => state.vacancies.catalogueData).map(c => c['title_rus'])
     const currentPage = useAppSelector(state => state.vacancies.currentPage)
@@ -26,26 +28,42 @@ export const Filters = () => {
     const jobArea = useAppSelector(state => state.vacancies.jobArea)
     const keyWord = useAppSelector(state => state.vacancies.keyWord)
 
+    // значения фильтра
+
     const [jobAreaValue, setJobAreaValue] = useState<string>(jobArea);
     const [minSalaryValue, setMinSalaryValue] = useState<number | ''>(paymentFrom === '' ? '' : paymentFrom);
     const [maxSalaryValue, setMaxSalaryValue] = useState<number | ''>(paymentTo === '' ? '' : paymentFrom);
 
+    // открытие селектора с вакансиями
+
     const [vacancyAriaSelectOpen, setVacancyAriaSelectOpen] = useState<boolean>(false);
 
+    // подключение классов
+
     const {classes, cx} = useStyles();
+
+    // data атрибуты
 
     const selectDataAttribute = {'data-elem': 'industry-select'}
     const minSalaryInputDataAttribute = {'data-elem': 'salary-from-input'}
     const maxSalaryInputDataAttribute = {'data-elem': 'salary-to-input'}
     const useFiltersDataAttribute = {'data-elem': 'search-button'}
 
+    // кнопка с фильтрами
+
     const onClickButtonHandler = () => {
         dispatch(setFiltredVacanciesDataTC(1, count, 1, keyWord, minSalaryValue, maxSalaryValue, jobAreaValue))
     }
 
+    // кнопка для очистки фильтров
+
     const onClockClearFiltersButton = () => {
         dispatch(setFiltersAC('', '', '', ''))
         dispatch(setVacanciesDataTC(1, count))
+        setMinSalaryValue('')
+        setMaxSalaryValue('')
+        setJobAreaValue('')
+
     }
 
     return (
@@ -70,7 +88,6 @@ export const Filters = () => {
                 searchValue={jobAreaValue}
                 nothingFound="Проверьте выбранную отрасль"
                 data={catalogueDataText}
-                maxDropdownHeight={188}
                 transitionProps={{transition: 'pop-top-left', duration: 80, timingFunction: 'ease'}}
                 rightSection={!vacancyAriaSelectOpen ?
                     <ChevronDown style={{color: '#ACADB9'}} size={'1rem'}/> :

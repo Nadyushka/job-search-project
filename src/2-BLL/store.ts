@@ -3,12 +3,14 @@ import { AnyAction, applyMiddleware, combineReducers, legacy_createStore } from 
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import {authReducer} from "./authReducer";
 import {vacanciesReducer} from "./vacanciesReducer";
+import {selectedVacanciesReducer} from "./selectedVacanciesReducer";
 
 
 // store
 const rootReducer = combineReducers({
     auth: authReducer,
     vacancies: vacanciesReducer,
+    selectedVacancies: selectedVacanciesReducer
 })
 
 export const store = legacy_createStore(rootReducer, applyMiddleware(thunk))

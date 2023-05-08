@@ -1,6 +1,5 @@
 import {AppThunk} from "./store";
 import {authApi} from "../1-DAL/authApi";
-import axios from "axios";
 import {errorHandler} from "../3-UI/u2-assets/utilits/error";
 
 
@@ -29,16 +28,10 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
             return {...state, error: action.error}
         case "job-search/auth/setUserData":
             return {...state, userAuthData: {...action.userAuthData}, isAuthorised: true}
+        case "job-search/auth/refreshToken":
+            return {...state, userAuthData: {...state.userAuthData, access_token: action.access_token, refresh_token: action.refresh_token}}
         default:
             return state
-    }
-}
-
-
-type ErrorType = {
-    error: {
-        code: string,
-        message: string
     }
 }
 
@@ -47,6 +40,20 @@ export const authorisedWithPasswordTC = (login: string, password: string, client
     dispatch(setErrorAuthAC(''))
     try {
         let res = await authApi.authorisedWithPassword(login, password, client_id, client_secret, hr)
+        dispatch(setUserDataAC(res.data))
+    } catch (e) {
+        errorHandler(e, dispatch, setErrorAuthAC)
+    } finally {
+        dispatch(isLoadingAC(false))
+    }
+}
+
+export const refreshTokenTC = (): AppThunk => async (dispatch, getState) => {
+    dispatch(isLoadingAC(true))
+    dispatch(setErrorAuthAC(''))
+    const refreshToken = getState().auth.userAuthData.refresh_token
+    try {
+        let res = await authApi.refreshToken(refreshToken)
         dispatch(setUserDataAC(res.data))
     } catch (e) {
         errorHandler(e, dispatch, setErrorAuthAC)
@@ -64,15 +71,21 @@ const setUserDataAC = (userAuthData: userAuthDataType) => ({
     type: 'job-search/auth/setUserData',
     userAuthData
 } as const)
+const refreshTokenAC = (access_token: string, refresh_token:string) => ({
+    type: 'job-search/auth/refreshToken',
+    access_token,
+    refresh_token
+} as const)
 
 //types
 
-type ActionsTypes = isLoadingACType | isAuthorisedACType | setErrorType | setAuthUserDataType
+type ActionsTypes = isLoadingACType | isAuthorisedACType | setErrorType | setAuthUserDataType | refreshTokenDataType
 
 type isLoadingACType = ReturnType<typeof isLoadingAC>
 type isAuthorisedACType = ReturnType<typeof isAuthorisedAC>
 type setErrorType = ReturnType<typeof setErrorAuthAC>
 type setAuthUserDataType = ReturnType<typeof setUserDataAC>
+type refreshTokenDataType = ReturnType<typeof refreshTokenAC>
 
 type userAuthDataType = {
     "access_token": string,

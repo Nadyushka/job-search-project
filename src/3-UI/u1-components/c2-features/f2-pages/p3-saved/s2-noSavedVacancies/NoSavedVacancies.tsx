@@ -1,10 +1,15 @@
 import React from 'react';
 import {Button, Container, createStyles, Image, rem, Text} from "@mantine/core";
 import noVacanciesFoundImg from '3-UI/u2-assets/pictures/noVacanciesFoundIcon.svg'
+import {useNavigate} from 'react-router-dom';
+import {PATH} from "../../../../c3-commonComponents/routes/Routes";
 
 export const NoSavedVacancies = () => {
 
     const {classes, cx} = useStyles();
+    const navigate = useNavigate()
+
+    const buttonOnClickHandler = () => navigate(PATH.VACANCY_SEARCH)
 
     return (
         <Container className={classes.noSelectedVacancyContainer}>
@@ -12,7 +17,9 @@ export const NoSavedVacancies = () => {
                    height={'230.27px'}/>
             <Text className={classes.noSelectedVacancyText}>Упс, здесь еще ничего нет!</Text>
             <Button sx={{fontFamily: 'Open Sans, sans-serif',}}
-                    className={classes.noSelectedVacancyButton}>Поиск
+                    className={classes.noSelectedVacancyButton}
+                    onClick={buttonOnClickHandler}
+            >Поиск
                 Вакансий</Button>
         </Container>
     );
