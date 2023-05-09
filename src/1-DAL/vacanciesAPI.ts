@@ -72,3 +72,17 @@ export type VacancyInfo = {
     vacancyRichText: string,
     marked: boolean
 }
+
+export type SelectedVacancyInfo = {
+    "id": number,
+    "payment_from": number | '',
+    "profession": string,
+    "currency": 'rub' | 'uah' | 'uzs',
+    "type_of_work": {
+        "title": string,
+    },
+    "town": {
+        "title": string,
+    },
+    marked: boolean
+}

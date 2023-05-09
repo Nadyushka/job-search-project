@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import {HeaderSimple} from "./3-UI/u1-components/c2-features/f1-header/Header";
-import {RoutesComponent} from "./3-UI/u1-components/c3-commonComponents/routes/Routes";
+import {HeaderSimple} from "./3-UI/u1-components/c1-features/f1-header/Header";
+import {RoutesComponent} from "./3-UI/u1-components/c2-commonComponents/routes/Routes";
 
 function App() {
 

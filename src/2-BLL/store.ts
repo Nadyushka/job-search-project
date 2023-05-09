@@ -1,9 +1,9 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { AnyAction, applyMiddleware, combineReducers, legacy_createStore } from 'redux'
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import {authReducer} from "./authReducer";
-import {vacanciesReducer} from "./vacanciesReducer";
-import {selectedVacanciesReducer} from "./selectedVacanciesReducer";
+import {authReducer} from "./authReucer/authReducer";
+import {vacanciesReducer} from "./vacancyReducer/vacanciesReducer";
+import {selectedVacanciesReducer} from "./selectedVacanciesReducer/selectedVacanciesReducer";
 
 
 // store
