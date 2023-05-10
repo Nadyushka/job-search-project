@@ -3,7 +3,6 @@ import {getDataFromLocalStorage} from "./localStorageData";
 
 export const setPropertyMarkedToVacancies = (vacanciesData: ResponseTypeVacancies) => {
     let selectedVacancies = getDataFromLocalStorage()
-    debugger
     return {
         ...vacanciesData,
         objects: vacanciesData.objects.map(vacancy => selectedVacancies.includes(vacancy.id) ?

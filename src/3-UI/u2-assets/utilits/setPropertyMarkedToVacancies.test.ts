@@ -1,7 +1,7 @@
 import {setPropertyMarkedToVacancies} from "./setPropertyMarkedToVacancies";
-import {ResponseTypeVacancies} from "../../../1-DAL/vacanciesAPI";
+import {ResponseTypeVacancies} from "1-DAL/vacanciesAPI";
 
-test('should update to each vacancy property marked depending local storage info', () => {
+test('should update to each vacancy property "marked" depending on local storage info', () => {
 
     let testSavedVacancies: ResponseTypeVacancies = {
         objects: [{

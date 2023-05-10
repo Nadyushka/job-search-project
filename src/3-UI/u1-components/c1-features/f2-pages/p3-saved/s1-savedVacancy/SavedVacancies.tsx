@@ -42,10 +42,10 @@ export const SavedVacancies = () => {
     let lastValueOfCurrentPage = firstValueOfCurrentPage + pageCount
 
     useEffect(() => {
-        dispatch(setSelectedVacanciesDataTC(1, 3))
         if (selectedVacancies.length === 0) {
             navigate(PATH.NO_SELECTED_VACANCIES)
         }
+        dispatch(setSelectedVacanciesDataTC(1, 3))
     }, [selectedVacancies.length])
 
     // if (!isAuthorised) {
