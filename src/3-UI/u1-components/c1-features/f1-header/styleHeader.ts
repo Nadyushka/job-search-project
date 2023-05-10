@@ -6,6 +6,8 @@ export const useStyles = createStyles((theme) => ({
         margin: '0px auto !important',
         borderRadius: `${theme.radius.sm} ${theme.radius.sm} ${rem(0)} ${rem(0)}`,
         border: 'none',
+        position: 'relative',
+        zIndex: 1,
     },
 
     header_wrapper: {
@@ -28,12 +30,30 @@ export const useStyles = createStyles((theme) => ({
         },
     },
 
+    dropdown: {
+        position: 'absolute',
+        top: rem(80),
+        left: 0,
+        right: 0,
+        zIndex: 0,
+        borderTopRightRadius: 0,
+        borderTopLeftRadius: 0,
+        borderTopWidth: 0,
+        overflow: 'hidden',
+        padding: '10px 20px',
+
+        [theme.fn.largerThan('sm')]: {
+            display: 'none',
+        },
+    },
+
     links: {
         [theme.fn.smallerThan('xs')]: {
             display: 'none',
         },
         fontStyle: 'normal',
         fontSize: `16px`,
+        
     },
 
     link: {

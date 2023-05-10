@@ -2,11 +2,12 @@ import {AppThunk} from "../store";
 import {
     ResponseTypeCatalogues,
     ResponseTypeVacancies,
-    SelectedVacancyInfo,
     vacancyApi,
     VacancyInfo
 } from "1-DAL/vacanciesAPI";
 import {errorHandler} from "3-UI/u2-assets/utilits/error";
+import {getDataFromLocalStorage} from "../../3-UI/u2-assets/utilits/localStorageData";
+import {setPropertyMarkedToVacancies} from "../../3-UI/u2-assets/utilits/setPropertyMarkedToVacancies";
 
 const initialState = {
     isLoading: false,
@@ -87,7 +88,6 @@ export const vacanciesReducer = (state: InitialStateType = initialState, action:
 // thunk creators
 
 export const setCatalogueDataTC = (): AppThunk => async (dispatch) => {
-
     dispatch(isLoadingAC(true))
     try {
         let res = await vacancyApi.getCatalogues()
@@ -102,23 +102,9 @@ export const setCatalogueDataTC = (): AppThunk => async (dispatch) => {
 export const setVacanciesDataTC = (currentPage: number, count: number,): AppThunk => async (dispatch, getState) => {
     dispatch(isLoadingAC(true))
     const token = getState().auth.userAuthData.access_token
-
-    const selectedVacanciesLS = localStorage.getItem('selectedVacancies')
-    let selectedVacancies: number[]
-    if (selectedVacanciesLS) {
-        selectedVacancies = JSON.parse(localStorage.getItem('selectedVacancies')!).selectedVacanciesArray.map((v: SelectedVacancyInfo) => v.id)
-    } else {
-        selectedVacancies = []
-    }
-
     try {
-        let res = await vacancyApi.getVacancies(token, currentPage, count)
-        let vacancies = {...res.data,
-            objects: res.data.objects.map(v => selectedVacancies.includes(v.id) ? {...v, marked: true} : {
-                ...v,
-                marked: false
-            })
-        }
+        const res = await vacancyApi.getVacancies(token, currentPage, count)
+        const vacancies = setPropertyMarkedToVacancies(res.data)
         dispatch(setVacanciesDataAC(vacancies))
     } catch (e) {
         errorHandler(e, dispatch, setErrorVacancyAC)
@@ -130,15 +116,6 @@ export const setVacanciesDataTC = (currentPage: number, count: number,): AppThun
 export const setFiltredVacanciesDataTC = (currentPage: number, count: number, published?: number, keyword?: string | '', payment_from?: number | '', payment_to?: number | '', catalogues?: string | ''): AppThunk => async (dispatch, getState) => {
     dispatch(isLoadingAC(true))
     const token = getState().auth.userAuthData.access_token
-
-    const selectedVacanciesLS = localStorage.getItem('selectedVacancies')
-    let selectedVacancies: number[]
-    if (selectedVacanciesLS) {
-        selectedVacancies = JSON.parse(localStorage.getItem('selectedVacancies')!).selectedVacanciesArray.map((v: SelectedVacancyInfo) => v.id)
-    } else {
-        selectedVacancies = []
-    }
-
     const catalogueID = getState().vacancies.catalogueData.find(c => c.title_rus === catalogues)!.key.toString()
     try {
         let res = await vacancyApi.getFiltredVacancies(token, {
@@ -151,12 +128,7 @@ export const setFiltredVacanciesDataTC = (currentPage: number, count: number, pu
             catalogues: catalogueID
         })
         dispatch(setFiltersAC(keyword, payment_from, payment_to, catalogues))
-        let vacancies = {...res.data,
-            objects: res.data.objects.map(v => selectedVacancies.includes(v.id) ? {...v, marked: true} : {
-                ...v,
-                marked: false
-            })
-        }
+        let vacancies = setPropertyMarkedToVacancies(res.data)
         dispatch(setVacanciesDataAC(vacancies))
     } catch (e) {
         errorHandler(e, dispatch, setErrorVacancyAC)
@@ -168,15 +140,7 @@ export const setFiltredVacanciesDataTC = (currentPage: number, count: number, pu
 export const setVacancyDataTC = (id: number): AppThunk => async (dispatch, getState) => {
     dispatch(isLoadingAC(true))
     const token = getState().auth.userAuthData.access_token
-
-    const selectedVacanciesLS = localStorage.getItem('selectedVacancies')
-    let selectedVacancies: number[]
-    if (selectedVacanciesLS) {
-        selectedVacancies = JSON.parse(localStorage.getItem('selectedVacancies')!).selectedVacanciesArray.map((v: SelectedVacancyInfo) => v.id)
-    } else {
-        selectedVacancies = []
-    }
-
+    let selectedVacancies = getDataFromLocalStorage()
     try {
         let res = await vacancyApi.getVacancy(id, token)
         let vacancies = {...res.data, marked: selectedVacancies.includes(res.data.id)}
@@ -192,22 +156,27 @@ export const setVacancyDataTC = (id: number): AppThunk => async (dispatch, getSt
 
 const isLoadingAC = (isLoading: boolean) => ({type: 'job-search/auth/isLoading', isLoading} as const)
 export const setErrorVacancyAC = (error: string) => ({type: 'job-search/auth/setError', error} as const)
+
 const setCatalogueDataAC = (catalogueData: ResponseTypeCatalogues[]) => ({
     type: 'job-search/vacancies/setCatalogueData',
     catalogueData
 } as const)
+
 const setVacanciesDataAC = (vacanciesData: ResponseTypeVacancies) => ({
     type: 'job-search/vacancies/setVacanciesData',
     vacanciesData
 } as const)
+
 const setVacancyDataAC = (vacancyData: VacancyInfo) => ({
     type: 'job-search/vacancies/setVacancyData',
     vacancyData
 } as const)
+
 const setPageInfoAC = (page: number) => ({
     type: 'job-search/vacancies/setPageInfo',
     page
 } as const)
+
 export const setFiltersAC = (keyword?: string | '', payment_from?: number | '', payment_to?: number | '', catalogues?: string | '') => ({
     type: 'job-search/vacancies/setFilters',
     payment_from, payment_to, catalogues, keyword

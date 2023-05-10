@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
 import {
     Box,
     Button,
@@ -9,14 +10,13 @@ import {
     Title
 } from "@mantine/core";
 import {useForm} from '@mantine/form';
-import {useAppDispatch, useAppSelector} from "2-BLL/store";
-import {authorisedWithPasswordTC, refreshTokenTC, setErrorAuthAC} from "2-BLL/authReucer/authReducer";
 import {PATH} from "../../../c2-commonComponents/routes/Routes";
-import {useNavigate} from "react-router-dom";
 import {LoaderComponent} from "../../../c2-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../c2-commonComponents/error/ErrorComponent";
 import {useStyles} from "./styleLogin";
+import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {errorAuth, isAuthorisedAuth, isLoadingAuth} from "2-BLL/authReucer/selectorsAuth";
+import {authorisedWithPasswordTC, refreshTokenTC, setErrorAuthAC} from "2-BLL/authReucer/authReducer";
 
 export const Login = () => {
 
@@ -77,7 +77,9 @@ export const Login = () => {
             <Group position="center" mt="md">
                 <Button disabled={isLoading} onClick={() => dispatch(refreshTokenTC())}>Refresh Token</Button>
             </Group>
+
             <ErrorComponent errorMessage={error} setError={setErrorAuthAC}/>
+
         </Container>
     );
 };

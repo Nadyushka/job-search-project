@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
-import {Header, Container, Burger, Group, Box} from '@mantine/core';
-import appIcon from '3-UI/u2-assets/pictures/appIcon.svg'
-import {useDisclosure} from '@mantine/hooks';
 import {useLocation, useNavigate} from 'react-router-dom'
+import {Header, Container, Burger, Group, Box, Transition, Paper} from '@mantine/core';
+import {useDisclosure} from '@mantine/hooks';
+import appIcon from '3-UI/u2-assets/pictures/appIcon.svg'
 import {PATH} from '3-UI/u1-components/c2-commonComponents/routes/Routes';
 import {useStyles} from './styleHeader';
 
@@ -46,13 +46,19 @@ export function HeaderSimple({links}: HeaderSimplePropsTypes) {
                         {items}
                     </Group>
                     <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm"/>
+
+                    <Transition transition="pop-top-right" duration={200} mounted={opened}>
+                        {(styles) => (
+                            <Paper className={classes.dropdown} withBorder style={styles}>
+                                {items}
+                            </Paper>
+                        )}
+                    </Transition>
                 </Box>
             </Container>
         </Header>
     );
 }
-
-// types
 
 type HeaderSimplePropsTypes = {
     links: { link: string; label: string }[];

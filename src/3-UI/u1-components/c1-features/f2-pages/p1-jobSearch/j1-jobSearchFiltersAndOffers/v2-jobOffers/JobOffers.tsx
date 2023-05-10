@@ -1,6 +1,8 @@
-import {Button, Container, Pagination, TextInput} from '@mantine/core';
 import React, {useEffect, useState} from 'react';
 import {Search} from 'tabler-icons-react';
+import {Button, Container, Pagination, Text, TextInput} from '@mantine/core';
+import {LoaderComponent} from "../../../../../c2-commonComponents/loader/Loader";
+import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComponent";
 import {VacancyItem} from "../../../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
@@ -8,9 +10,6 @@ import {
     setFiltredVacanciesDataTC,
     setVacanciesDataTC
 } from "2-BLL/vacancyReducer/vacanciesReducer";
-import {LoaderComponent} from "../../../../../c2-commonComponents/loader/Loader";
-import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComponent";
-import {useStyles} from "./styleJobOffers";
 import {
     currentPageVacancies,
     errorVacancies,
@@ -22,13 +21,11 @@ import {
     paymentToVacancies,
     vacanciesDataVacancies
 } from "2-BLL/vacancyReducer/vacancySelectors";
+import {useStyles} from "./styleJobOffers";
 
 export const JobOffers = () => {
 
-    // dispatch и selectors
-
     const dispatch = useAppDispatch()
-
     const vacancies = useAppSelector(vacanciesDataVacancies).objects
     const error = useAppSelector(errorVacancies)
     const isLoading = useAppSelector(isLoadingVacancies)
@@ -39,22 +36,14 @@ export const JobOffers = () => {
     const jobArea = useAppSelector(jobAreaVacancies)
     const kewWord = useAppSelector(keyWordVacancies)
 
-    // page information
-
     const [activePage, setPage] = useState<number>(1);
     const totalPages = totalVacancies / pagesCount
     const [kewWordValue, setKewWordValue] = useState<string>(kewWord)
 
-    // styles
-
     const {classes, cx} = useStyles();
-
-    // set data attributes
 
     const keyWordInputDataAttribute = {'data-elem': 'search-input'}
     const useKeyWordDataAttribute = {'data-elem': 'search-button'}
-
-    // set filters values
 
     const pageOnClickHandler = () => {
         dispatch(setFiltersAC(kewWordValue, paymentFrom, paymentTo, jobArea))
@@ -63,7 +52,8 @@ export const JobOffers = () => {
     useEffect(() => {
         if (jobArea.length !== 0) {
             dispatch(setFiltredVacanciesDataTC(activePage, pagesCount, 1, kewWordValue, paymentFrom, paymentTo, jobArea))
-        } else {
+        }
+        else {
             dispatch(setCatalogueDataTC())
             dispatch(setVacanciesDataTC(activePage, pagesCount))
         }
@@ -82,17 +72,30 @@ export const JobOffers = () => {
                        size={'lg'}
                        placeholder="Введите название вакансии"
                        icon={<Search size="1rem"/>}
+                       rightSection={
+                           <Button size="sm"
+                                   onClick={pageOnClickHandler}
+                                   {...useKeyWordDataAttribute}>
+                               Поиск
+                           </Button>}
                        {...keyWordInputDataAttribute}
-                       rightSection={<Button size="sm"
-                                             onClick={pageOnClickHandler} {...useKeyWordDataAttribute}>Поиск</Button>}/>
-            {vacancies.length > 0 && vacancies.map((j) => {
+            />
+            {vacancies.length > 0 && vacancies.map(({
+                                                        id,
+                                                        profession,
+                                                        payment_from,
+                                                        currency,
+                                                        type_of_work,
+                                                        town,
+                                                        marked
+                                                    }) => {
                 return (
-                    <VacancyItem key={j.id} id={j.id} professionName={j.profession}
-                                 salary={j.payment_from}
-                                 curruency={j.currency}
-                                 type={j.type_of_work.title}
-                                 place={j.town.title}
-                                 marked={j.marked} showSelectedVacancy={false}/>
+                    <VacancyItem key={id} id={id} professionName={profession}
+                                 salary={payment_from}
+                                 curruency={currency}
+                                 type={type_of_work.title}
+                                 place={town.title}
+                                 marked={marked} showSelectedVacancy={false}/>
                 )
             })}
             {vacancies.length > 0 &&
@@ -101,6 +104,8 @@ export const JobOffers = () => {
                             onChange={setPage}
                             onClick={pageOnClickHandler}
                             total={totalPages}/>}
+
+            {vacancies.length === 0 && <Text className={classes.jobSearchNotFound}>Совпадений по заданному набору фильтров нет</Text> }
 
             <ErrorComponent errorMessage={error} setError={setErrorVacancyAC}/>
 

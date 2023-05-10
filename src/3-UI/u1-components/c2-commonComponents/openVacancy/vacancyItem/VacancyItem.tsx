@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {MouseEvent, useState} from 'react';
 import {Box, Container, Text, Title} from "@mantine/core";
 import selectedStar from '3-UI/u2-assets/pictures/selectedStar.svg'
@@ -38,23 +38,16 @@ export const VacancyItem = ({
                                 showSelectedVacancy
                             }: PropsType) => {
 
-    // dispatch и selectors
 
     const dispatch = useAppDispatch()
     const currentPage = useAppSelector(currentPageSelectedVacancies)
     const pageCount = useAppSelector(pageCountSelectedVacancies)
 
-    //hook
-
     const navigate = useNavigate()
-
-    // watch vacancy
 
     const onClickVacancyHandler = () => navigate(`/selectedVacancy/${id}`);
 
-    // vacancy selected toggler
-
-    const [mark, setMark] = useState<boolean>(marked)
+    const [mark, setMark] = useState<boolean>(false)
 
     const toggleSelectVacancies = (e: MouseEvent<HTMLImageElement>) => {
         if (showSelectedVacancy) {
@@ -70,13 +63,13 @@ export const VacancyItem = ({
         setMark(!mark)
     }
 
-    // add style
-
     const {classes, cx} = useStyles();
 
-    // add data attribute
-
     const vacancyIdDataAttribute = {'data-elem': `vacancy-${id}`}
+
+    useEffect(() => {
+        setMark(marked)
+    }, [marked])
 
     return (
         <Container className={classes.vacancyItemContainer} onClick={onClickVacancyHandler} {...vacancyIdDataAttribute}>

@@ -11,6 +11,10 @@ export const useStyles = createStyles((theme) => ({
         [`@media (max-width: ${rem(1160)})`]: {
             flex: '1 1 48%',
         },
+
+        [`@media (max-width: ${rem(800)})`]: {
+            marginLeft: '0px'
+        },
     },
 
     inputJobName: {
@@ -54,5 +58,9 @@ export const useStyles = createStyles((theme) => ({
         [`@media (max-width: ${rem(400)})`]: {
             flexDirection: 'column',
         },
+    },
+
+    jobSearchNotFound: {
+        marginTop: '20px'
     }
 }))

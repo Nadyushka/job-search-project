@@ -1,26 +1,24 @@
-import {Container, Pagination} from '@mantine/core';
 import React, {useEffect, useState} from 'react';
-import {VacancyItem} from "../../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
-import {PATH} from "../../../../c2-commonComponents/routes/Routes";
-import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {useNavigate} from "react-router-dom";
+import {Container, Pagination} from '@mantine/core';
+import {useAppDispatch, useAppSelector} from "2-BLL/store";
+import {isAuthorisedAuth} from "2-BLL/authReucer/selectorsAuth";
 import {
     setErrorSelectedVacancyAC,
     setSelectedVacanciesDataTC
 } from "2-BLL/selectedVacanciesReducer/selectedVacanciesReducer";
-import {LoaderComponent} from "../../../../c2-commonComponents/loader/Loader";
-import {ErrorComponent} from "../../../../c2-commonComponents/error/ErrorComponent";
-import {useStyles} from './styleSavedVacancies';
-import {isAuthorisedAuth} from "2-BLL/authReucer/selectorsAuth";
 import {
     currentPageSelectedVacancies,
     errorSelectedVacancies,
     isLoadingSelectedVacancies, pageCountSelectedVacancies, vacanciesDataSelectedVacancies
 } from "2-BLL/selectedVacanciesReducer/selectorsSelectedVacancies";
+import {VacancyItem} from "../../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
+import {PATH} from "../../../../c2-commonComponents/routes/Routes";
+import {LoaderComponent} from "../../../../c2-commonComponents/loader/Loader";
+import {ErrorComponent} from "../../../../c2-commonComponents/error/ErrorComponent";
+import {useStyles} from './styleSavedVacancies';
 
 export const SavedVacancies = () => {
-
-    // dispatch and selectors
 
     const dispatch = useAppDispatch()
     const isAuthorised = useAppSelector(isAuthorisedAuth)
@@ -31,19 +29,16 @@ export const SavedVacancies = () => {
     const pageCount = useAppSelector(pageCountSelectedVacancies)
     const currentPage = useAppSelector(currentPageSelectedVacancies)
 
-    // hooks
-
     const navigate = useNavigate()
-
-    // add styles
 
     const {classes, cx} = useStyles();
 
-    // set pages
-
     let totalPages = Math.ceil(totalVacancies / pageCount)
     const [activePage, setPage] = useState<number>(currentPage);
-    let firstValueOfCurrentPage = activePage > totalPages ? activePage * pageCount - 2 * pageCount : activePage * pageCount - pageCount
+
+    let regularFirstPage = activePage * pageCount - pageCount;
+    let notEnoughValuesPage = activePage * pageCount - 2 * pageCount
+    let firstValueOfCurrentPage = activePage > totalPages ? notEnoughValuesPage : regularFirstPage
     let lastValueOfCurrentPage = firstValueOfCurrentPage + pageCount
 
     useEffect(() => {
@@ -53,9 +48,9 @@ export const SavedVacancies = () => {
         }
     }, [selectedVacancies.length])
 
-    if (!isAuthorised) {
-        navigate(PATH.LOGIN)
-    }
+    // if (!isAuthorised) {
+    //     navigate(PATH.LOGIN)
+    // }
 
     if (isLoading) {
         return <LoaderComponent/>
@@ -63,11 +58,19 @@ export const SavedVacancies = () => {
 
     return (
         <Container className={classes.selectedVacancyContainer}>
-            {selectedVacancies.slice(firstValueOfCurrentPage, lastValueOfCurrentPage).map(v => {
+            {selectedVacancies.slice(firstValueOfCurrentPage, lastValueOfCurrentPage).map(({
+                                                                                               id,
+                                                                                               profession,
+                                                                                               currency,
+                                                                                               payment_from,
+                                                                                               type_of_work,
+                                                                                               town,
+                                                                                               marked
+                                                                                           }) => {
                 return (
-                    <VacancyItem key={v.id} id={v.id} professionName={v.profession} curruency={v.currency}
-                                 salary={v.payment_from} type={v.type_of_work.title} place={v.town.title}
-                                 showSelectedVacancy={true} marked={v.marked}/>
+                    <VacancyItem key={id} id={id} professionName={profession} curruency={currency}
+                                 salary={payment_from} type={type_of_work.title} place={town.title}
+                                 showSelectedVacancy={true} marked={marked}/>
                 )
             })}
             <Pagination className={classes.jobSearchPagination}

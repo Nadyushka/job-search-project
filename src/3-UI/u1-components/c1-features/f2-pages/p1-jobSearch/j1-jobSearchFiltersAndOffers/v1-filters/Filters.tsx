@@ -11,20 +11,18 @@ import {
 import {ChevronDown, ChevronUp} from 'tabler-icons-react';
 import {setFiltersAC, setFiltredVacanciesDataTC, setVacanciesDataTC} from "2-BLL/vacancyReducer/vacanciesReducer";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
-import {useStyles} from './styleFilters';
 import {
     catalogueDataVacancies,
     currentPageVacancies, jobAreaVacancies, keyWordVacancies,
     pageCountVacancies, paymentFromVacancies, paymentToVacancies
 } from "2-BLL/vacancyReducer/vacancySelectors";
+import {useStyles} from './styleFilters';
 
 export const Filters = () => {
 
-    // dispatch  и данные из стейта
-
     const dispatch = useAppDispatch()
 
-    const catalogueDataText = useAppSelector(catalogueDataVacancies).map(c => c['title_rus'])
+    const catalogueDataText = useAppSelector(catalogueDataVacancies).map(catalogue => catalogue['title_rus'])
     const currentPage = useAppSelector(currentPageVacancies)
     const count = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
@@ -32,34 +30,22 @@ export const Filters = () => {
     const jobArea = useAppSelector(jobAreaVacancies)
     const keyWord = useAppSelector(keyWordVacancies)
 
-    // значения фильтра
-
     const [jobAreaValue, setJobAreaValue] = useState<string>(jobArea);
     const [minSalaryValue, setMinSalaryValue] = useState<number | ''>(paymentFrom === '' ? '' : paymentFrom);
     const [maxSalaryValue, setMaxSalaryValue] = useState<number | ''>(paymentTo === '' ? '' : paymentFrom);
 
-    // открытие селектора с вакансиями
-
     const [vacancyAriaSelectOpen, setVacancyAriaSelectOpen] = useState<boolean>(false);
 
-    // подключение классов
-
     const {classes, cx} = useStyles();
-
-    // data атрибуты
 
     const selectDataAttribute = {'data-elem': 'industry-select'}
     const minSalaryInputDataAttribute = {'data-elem': 'salary-from-input'}
     const maxSalaryInputDataAttribute = {'data-elem': 'salary-to-input'}
     const useFiltersDataAttribute = {'data-elem': 'search-button'}
 
-    // кнопка с фильтрами
-
     const onClickButtonHandler = () => {
         dispatch(setFiltredVacanciesDataTC(1, count, 1, keyWord, minSalaryValue, maxSalaryValue, jobAreaValue))
     }
-
-    // кнопка для очистки фильтров
 
     const onClockClearFiltersButton = () => {
         dispatch(setFiltersAC('', '', '', ''))

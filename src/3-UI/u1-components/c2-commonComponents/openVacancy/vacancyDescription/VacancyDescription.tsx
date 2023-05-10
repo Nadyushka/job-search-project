@@ -1,6 +1,6 @@
-import {Box, Container, createStyles, List, Title} from '@mantine/core';
 import React from 'react';
-import { useStyles } from './styleVacancyDescription';
+import {Container, List, Title} from '@mantine/core';
+import {useStyles} from './styleVacancyDescription';
 
 
 type PropsType = {
@@ -17,7 +17,7 @@ export const VacancyDescription = ({responsibilities, requirements, conditions}:
         <Container className={classes.vacancyContainer}>
             <Title order={4}>Обязанности:</Title>
             <List size="sm">
-                {responsibilities.map((r,i) => {
+                {responsibilities.map((r, i) => {
                         return (
                             <List.Item key={i}>{r}</List.Item>
                         )
@@ -35,7 +35,7 @@ export const VacancyDescription = ({responsibilities, requirements, conditions}:
             </List>
             <Title order={4}>Условия:</Title>
             <List size="sm">
-                {conditions.map((c,i) => {
+                {conditions.map((c, i) => {
                         return (
                             <List.Item key={i}>{c}</List.Item>
                         )

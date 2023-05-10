@@ -17,7 +17,6 @@ export const useStyles = createStyles((theme) => ({
     },
 
     filterTitle: {
-        width: `${rem(275)}`,
         margin: '0px auto',
         display: 'flex',
         justifyContent: 'space-between',
