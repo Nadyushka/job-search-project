@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const instance = axios.create({
+const instance = axios.create({
     baseURL: 'https://startup-summer-2023-proxy.onrender.com/2.0/',
     withCredentials: true,
     headers: {
@@ -9,10 +9,12 @@ export const instance = axios.create({
 })
 
 export const authApi = {
-    authorisedWithPassword(login: string, password: string, client_id: number, client_secret: string, hr: number) {
-        const params = {login, password, client_id: client_id.toString(), client_secret, hr}
+
+    authorisedWithPassword(paramsData: { login: string, password: string, client_id: number, client_secret: string, hr: number }) {
+        const params = {...paramsData}
         return instance.get<ResponseTypeAuth>('oauth2/password', {params})
     },
+
     refreshToken(refresh_token: string) {
         const params = {
             refresh_token,

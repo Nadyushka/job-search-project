@@ -17,7 +17,7 @@ const initialState = {
 
 type InitialStateType = typeof initialState
 
-export const selectedVacanciesReducer = (state: InitialStateType = initialState, action: ActionsTypes): InitialStateType => {
+export const selectedVacanciesReducer = (state: InitialStateType = initialState, action: ActionsSelectedVacanciesTypes): InitialStateType => {
     switch (action.type) {
         case "job-search/auth/isLoading":
             return {...state, isLoading: action.isLoading}
@@ -31,7 +31,7 @@ export const selectedVacanciesReducer = (state: InitialStateType = initialState,
                 vacanciesData: {
                     ...state.vacanciesData,
                     total: action.objects.length,
-                    objects: action.objects.map(v => ({...v}))
+                    objects: action.objects.map(vacancies => ({...vacancies}))
                 }
             }
         default:
@@ -98,7 +98,7 @@ export const addVacancyToSelectedTC = (id: number, professionName: string, salar
 
 const isLoadingAC = (isLoading: boolean) => ({type: 'job-search/auth/isLoading', isLoading} as const)
 export const setErrorSelectedVacancyAC = (error: string) => ({type: 'job-search/auth/setError', error} as const)
-const setSelectedVacanciesDataAC = (objects: SelectedVacancyInfo[], currentPage: number, count: number) => ({
+export const setSelectedVacanciesDataAC = (objects: SelectedVacancyInfo[], currentPage: number, count: number) => ({
     type: 'job-search/selectedVacancies/setSelectedVacanciesData',
     objects,
     count,
@@ -107,7 +107,7 @@ const setSelectedVacanciesDataAC = (objects: SelectedVacancyInfo[], currentPage:
 
 // types
 
-type ActionsTypes =
+export type ActionsSelectedVacanciesTypes =
     isLoadingACType
     | setErrorType
     | setSelectedVacanciesDataType

@@ -13,17 +13,17 @@ export const vacancyApi = {
     getCatalogues() {
         return instance.get<ResponseTypeCatalogues[]>('catalogues')
     },
-    getVacancies(token: string, page: number, count: number = 3) {
+
+    getVacancies(token: string, paramsData: { currentPage: number, count: number }) {
         const params = {
-            page,
-            count,
+            ...paramsData,
             'Authorization': `Bearer ${token}`,
             published: 1,
         }
         return instance.get<ResponseTypeVacancies>('vacancies', {params})
     },
 
-    getFiltredVacancies(token: string, paramData: { page: number, count: number, published?: number, keyword?: string, payment_from?: number | '', payment_to?: number | '', catalogues?: string }) {
+    getFiltredVacancies(token: string, paramData: { currentPage: number, count: number, published?: number, keyword?: string, payment_from?: number | '', payment_to?: number | '', catalogues?: string }) {
         const params = {
             ...paramData,
             'order_field': 'payment',
@@ -41,7 +41,7 @@ export const vacancyApi = {
 
 export type ResponseTypeCatalogues = {
     title_rus: string,
-    key: 33,
+    key: number,
 }
 
 

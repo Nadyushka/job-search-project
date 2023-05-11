@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from './3-UI/u1-components/c0-App/App';
 import reportWebVitals from './reportWebVitals';
 import {Global, MantineProvider} from '@mantine/core';
 import bold from '3-UI/u3-styles/fonts/OpenSans-Bold.ttf'

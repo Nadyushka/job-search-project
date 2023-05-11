@@ -48,7 +48,7 @@ const initialState = {
 
 type InitialStateType = typeof initialState
 
-export const vacanciesReducer = (state: InitialStateType = initialState, action: ActionsTypes): InitialStateType => {
+export const vacanciesReducer = (state: InitialStateType = initialState, action: ActionsVacanciesTypes): InitialStateType => {
     switch (action.type) {
         case "job-search/auth/isLoading":
             return {...state, isLoading: action.isLoading}
@@ -103,7 +103,7 @@ export const setVacanciesDataTC = (currentPage: number, count: number,): AppThun
     dispatch(isLoadingAC(true))
     const token = getState().auth.userAuthData.access_token
     try {
-        const res = await vacancyApi.getVacancies(token, currentPage, count)
+        const res = await vacancyApi.getVacancies(token, {currentPage, count})
         const vacancies = setPropertyMarkedToVacancies(res.data)
         dispatch(setVacanciesDataAC(vacancies))
     } catch (e) {
@@ -119,7 +119,7 @@ export const setFiltredVacanciesDataTC = (currentPage: number, count: number, pu
     const catalogueID = getState().vacancies.catalogueData.find(c => c.title_rus === catalogues)!.key.toString()
     try {
         let res = await vacancyApi.getFiltredVacancies(token, {
-            page: currentPage,
+            currentPage,
             count,
             published,
             keyword,
@@ -157,22 +157,22 @@ export const setVacancyDataTC = (id: number): AppThunk => async (dispatch, getSt
 const isLoadingAC = (isLoading: boolean) => ({type: 'job-search/auth/isLoading', isLoading} as const)
 export const setErrorVacancyAC = (error: string) => ({type: 'job-search/auth/setError', error} as const)
 
-const setCatalogueDataAC = (catalogueData: ResponseTypeCatalogues[]) => ({
+export const setCatalogueDataAC = (catalogueData: ResponseTypeCatalogues[]) => ({
     type: 'job-search/vacancies/setCatalogueData',
     catalogueData
 } as const)
 
-const setVacanciesDataAC = (vacanciesData: ResponseTypeVacancies) => ({
+export const setVacanciesDataAC = (vacanciesData: ResponseTypeVacancies) => ({
     type: 'job-search/vacancies/setVacanciesData',
     vacanciesData
 } as const)
 
-const setVacancyDataAC = (vacancyData: VacancyInfo) => ({
+export const setVacancyDataAC = (vacancyData: VacancyInfo) => ({
     type: 'job-search/vacancies/setVacancyData',
     vacancyData
 } as const)
 
-const setPageInfoAC = (page: number) => ({
+export const setPageInfoAC = (page: number) => ({
     type: 'job-search/vacancies/setPageInfo',
     page
 } as const)
@@ -185,7 +185,7 @@ export const setFiltersAC = (keyword?: string | '', payment_from?: number | '', 
 
 // types
 
-type ActionsTypes =
+export type ActionsVacanciesTypes =
     isLoadingACType
     | setErrorType
     | setCatalogueDataType
