@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './3-UI/u1-components/c0-App/App';
+import {App} from './3-UI/u1-components/c0-App/App';
 import reportWebVitals from './reportWebVitals';
 import {Global, MantineProvider} from '@mantine/core';
 import bold from '3-UI/u3-styles/fonts/OpenSans-Bold.ttf'
@@ -14,23 +14,23 @@ const root = ReactDOM.createRoot(
 );
 root.render(
     <Provider store={store}>
-        <HashRouter>
-            <MantineProvider theme={{colorScheme: 'light', fontFamily: 'Inter, sans-serif'}}>
-                <Global
-                    styles={[
-                        {
-                            '@font-face': {
-                                fontFamily: 'Open Sans',
-                                src: `url('${bold}') format("ttf")`,
-                                fontWeight: 700,
-                                fontStyle: 'normal',
-                            },
+        <MantineProvider theme={{colorScheme: 'light', fontFamily: 'Inter, sans-serif'}}>
+            <Global
+                styles={[
+                    {
+                        '@font-face': {
+                            fontFamily: 'Open Sans',
+                            src: `url('${bold}') format("ttf")`,
+                            fontWeight: 700,
+                            fontStyle: 'normal',
                         },
-                    ]}
-                />
+                    },
+                ]}
+            />
+            <HashRouter>
                 <App/>
-            </MantineProvider>
-        </HashRouter>
+            </HashRouter>
+        </MantineProvider>
     </Provider>
 );
 

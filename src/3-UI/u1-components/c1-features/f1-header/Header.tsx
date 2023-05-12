@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom'
+import {NavLink, useLocation} from 'react-router-dom'
 import {Header, Container, Burger, Group, Box, Transition, Paper} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
 import appIcon from '3-UI/u2-assets/pictures/appIcon.svg'
@@ -8,7 +8,6 @@ import {useStyles} from './styleHeader';
 
 export function HeaderSimple({links}: HeaderSimplePropsTypes) {
 
-    const navigate = useNavigate()
     const {pathname} = useLocation()
     const [opened, {toggle}] = useDisclosure(false);
 
@@ -23,18 +22,16 @@ export function HeaderSimple({links}: HeaderSimplePropsTypes) {
     }, [pathname])
 
     const items = links.map((link) => (
-        <a
+        <NavLink
             key={link.label}
-            href={link.link}
+            to={link.link}
             className={cx(classes.link, {[classes.linkActive]: active === link.link})}
             onClick={(event) => {
-                event.preventDefault();
                 setActive(link.link);
-                navigate(link.link === 'vacancySearch' ? PATH.VACANCY_SEARCH : PATH.SELECTED_VACANCIES)
             }}
         >
             {link.label}
-        </a>
+        </NavLink>
     ));
 
     return (
