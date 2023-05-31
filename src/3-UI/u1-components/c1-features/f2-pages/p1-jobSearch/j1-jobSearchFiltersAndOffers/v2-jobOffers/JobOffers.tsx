@@ -7,10 +7,11 @@ import {VacancyItem} from "../../../../../c2-commonComponents/openVacancy/vacanc
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
     setCatalogueDataTC, setErrorVacancyAC, setFiltersAC,
-    setFiltredVacanciesDataTC,
+    setFiltredVacanciesDataTC, setKewWordValueAC, setPageInfoAC,
     setVacanciesDataTC
 } from "2-BLL/vacancyReducer/vacanciesReducer";
 import {
+    catalogueDataVacancies,
     currentPageVacancies,
     errorVacancies,
     isLoadingVacancies,
@@ -32,12 +33,16 @@ export const JobOffers = () => {
     const totalVacancies = useAppSelector(vacanciesDataVacancies).total
     const pagesCount = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
+    const currentPage = useAppSelector(currentPageVacancies)
     const paymentTo = useAppSelector(paymentToVacancies)
     const jobArea = useAppSelector(jobAreaVacancies)
     const kewWord = useAppSelector(keyWordVacancies)
+    const catalogues = useAppSelector(catalogueDataVacancies)
+
 
     const [activePage, setPage] = useState<number>(1);
-    const totalPages = totalVacancies / pagesCount
+    const maxVacancies = 500;
+    const totalPages = totalVacancies > maxVacancies ? maxVacancies / pagesCount : totalVacancies / pagesCount
     const [kewWordValue, setKewWordValue] = useState<string>(kewWord)
 
     const {classes, cx} = useStyles();
@@ -45,27 +50,20 @@ export const JobOffers = () => {
     const keyWordInputDataAttribute = {'data-elem': 'search-input'}
     const useKeyWordDataAttribute = {'data-elem': 'search-button'}
 
-    const pageOnClickHandler = () => {
-        dispatch(setFiltersAC(kewWordValue, paymentFrom, paymentTo, jobArea))
-    }
-
     useEffect(() => {
-        if (jobArea.length !== 0) {
-            dispatch(setFiltredVacanciesDataTC(activePage, pagesCount, 1, kewWordValue, paymentFrom, paymentTo, jobArea))
-        }
-        else {
+        if (catalogues.length !== 0) {
+            dispatch(setFiltredVacanciesDataTC())
+        } else {
             dispatch(setCatalogueDataTC())
             dispatch(setVacanciesDataTC(activePage, pagesCount))
         }
-        kewWord === '' && setKewWordValue('')
-    }, [activePage, paymentFrom, paymentTo, jobArea, kewWord])
-
-    if (isLoading) {
-        return <LoaderComponent/>
-    }
+        setKewWordValue(kewWord)
+        setPage(currentPage)
+    }, [activePage, paymentFrom, paymentTo, jobArea, kewWord, currentPage])
 
     return (
         <Container className={classes.jobSearchContainer}>
+            {isLoading && <LoaderComponent/>}
             <TextInput className={classes.inputJobName}
                        value={kewWordValue}
                        onChange={(e) => setKewWordValue(e.currentTarget.value)}
@@ -74,7 +72,7 @@ export const JobOffers = () => {
                        icon={<Search size="1rem"/>}
                        rightSection={
                            <Button size="sm"
-                                   onClick={pageOnClickHandler}
+                                   onClick={()=>dispatch(setKewWordValueAC(kewWordValue))}
                                    {...useKeyWordDataAttribute}>
                                Поиск
                            </Button>}
@@ -101,11 +99,15 @@ export const JobOffers = () => {
             {vacancies.length > 0 &&
                 <Pagination className={classes.jobSearchPagination}
                             value={activePage}
-                            onChange={setPage}
-                            onClick={pageOnClickHandler}
+                            onChange={(value) => {
+                                setPage(value)
+                                dispatch(setPageInfoAC(value))
+                            }}
                             total={totalPages}/>}
 
-            {vacancies.length === 0 && <Text className={classes.jobSearchNotFound}>Совпадений по заданному набору фильтров нет</Text> }
+            {isLoading === false && vacancies.length === 0 &&
+                <Text className={classes.jobSearchNotFound}>Упс, совпадений по заданному набору фильтров нет</Text>
+            }
 
             <ErrorComponent errorMessage={error} setError={setErrorVacancyAC}/>
 

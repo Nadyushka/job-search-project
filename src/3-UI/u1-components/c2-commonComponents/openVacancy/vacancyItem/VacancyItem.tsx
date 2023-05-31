@@ -35,7 +35,6 @@ export const VacancyItem = ({
                                 type,
                                 place,
                                 marked,
-                                showSelectedVacancy
                             }: PropsType) => {
 
 
@@ -45,31 +44,27 @@ export const VacancyItem = ({
 
     const navigate = useNavigate()
 
+    const [mark, setMark] = useState<boolean>(marked)
+
     const onClickVacancyHandler = () => navigate(`/selectedVacancy/${id}`);
 
-    const [mark, setMark] = useState<boolean>(false)
 
     const toggleSelectVacancies = (e: MouseEvent<HTMLImageElement>) => {
-        if (showSelectedVacancy) {
-            dispatch(removeVacancyFromSelectionTC(id, currentPage, pageCount))
-        }
-        if (!marked) {
+        if (!mark) {
+            setMark(true)
             dispatch(addVacancyToSelectedTC(id, professionName, salary, curruency, type, place))
         }
-        if (!showSelectedVacancy && marked) {
+        if (mark) {
+            setMark(false)
             dispatch(removeVacancyFromSelectionTC(id, currentPage, pageCount))
         }
         e.stopPropagation();
-        setMark(!mark)
     }
 
     const {classes, cx} = useStyles();
 
     const vacancyIdDataAttribute = {'data-elem': `vacancy-${id}`}
 
-    useEffect(() => {
-        setMark(marked)
-    }, [marked])
 
     return (
         <Container className={classes.vacancyItemContainer} onClick={onClickVacancyHandler} {...vacancyIdDataAttribute}>

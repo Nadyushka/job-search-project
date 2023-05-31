@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -44,16 +44,18 @@ export const Filters = () => {
     const useFiltersDataAttribute = {'data-elem': 'search-button'}
 
     const onClickButtonHandler = () => {
-        dispatch(setFiltredVacanciesDataTC(1, count, 1, keyWord, minSalaryValue, maxSalaryValue, jobAreaValue))
+        dispatch(setFiltersAC(minSalaryValue, maxSalaryValue, jobAreaValue, keyWord))
     }
 
     const onClockClearFiltersButton = () => {
         dispatch(setFiltersAC('', '', '', ''))
-        dispatch(setVacanciesDataTC(1, count))
-        setMinSalaryValue('')
-        setMaxSalaryValue('')
-        setJobAreaValue('')
     }
+
+    useEffect(() => {
+        setJobAreaValue(jobArea)
+        setMinSalaryValue(paymentFrom)
+        setMaxSalaryValue(paymentTo)
+    }, [paymentFrom, paymentTo, jobArea])
 
     return (
         <Container className={classes.filtersContainer}>
@@ -112,7 +114,10 @@ export const Filters = () => {
                     className={classes.salaryInput}
                     min={0}
                     value={minSalaryValue}
-                    onChange={setMinSalaryValue}
+                    onChange={(value) => {
+                        setMinSalaryValue(value)
+                        value > maxSalaryValue && setMaxSalaryValue(value)
+                    }}
                     step={1000}
                     {...minSalaryInputDataAttribute}
                 />
@@ -122,7 +127,10 @@ export const Filters = () => {
                     className={`${classes.salaryInput}  ${classes.salaryInputMax}`}
                     min={0}
                     value={maxSalaryValue}
-                    onChange={setMaxSalaryValue}
+                    onChange={(value) => {
+                        setMaxSalaryValue(value)
+                        value < minSalaryValue && setMinSalaryValue(value);
+                    }}
                     step={1000}
                     {...maxSalaryInputDataAttribute}
                 />

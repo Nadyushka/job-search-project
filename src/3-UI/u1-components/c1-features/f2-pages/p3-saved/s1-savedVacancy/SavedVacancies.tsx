@@ -48,9 +48,9 @@ export const SavedVacancies = () => {
         dispatch(setSelectedVacanciesDataTC(1, 3))
     }, [selectedVacancies.length])
 
-    if (!isAuthorised) {
-        navigate(PATH.LOGIN)
-    }
+    // if (!isAuthorised) {
+    //     navigate(PATH.LOGIN)
+    // }
 
     if (isLoading) {
         return <LoaderComponent/>

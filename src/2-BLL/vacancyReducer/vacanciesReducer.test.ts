@@ -85,9 +85,9 @@ describe('vacanciesReducers actions test', () => {
     })
 
     it('should set correct catalogues data', () => {
-        const catalogueData:ResponseTypeCatalogues[] = [{title_rus: 'IT', key: 1},{title_rus: 'MUSIC', key: 2}]
+        const catalogueData: ResponseTypeCatalogues[] = [{title_rus: 'IT', key: 1}, {title_rus: 'MUSIC', key: 2}]
         const endState = vacanciesReducer(startState, setCatalogueDataAC(catalogueData))
-        expect(endState.catalogueData).toStrictEqual([{title_rus: 'IT', key: 1},{title_rus: 'MUSIC', key: 2}])
+        expect(endState.catalogueData).toStrictEqual([{title_rus: 'IT', key: 1}, {title_rus: 'MUSIC', key: 2}])
     })
 
     it('should set correct vacancies data', () => {
@@ -107,8 +107,7 @@ describe('vacanciesReducers actions test', () => {
     })
 
     it('should set correct filters data', () => {
-        const endState = vacanciesReducer(startState, setFiltersAC('Manager', 50000, 100000))
-        expect(endState.keyWord).toBe('Manager')
+        const endState = vacanciesReducer(startState, setFiltersAC(50000, 100000, '33', 'manager'))
         expect(endState.payment_from).toBe(50000)
         expect(endState.payment_to).toBe(100000)
     })

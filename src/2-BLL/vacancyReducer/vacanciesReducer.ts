@@ -8,6 +8,8 @@ import {
 import {errorHandler} from "3-UI/u2-assets/utilits/error";
 import {getDataFromLocalStorage} from "../../3-UI/u2-assets/utilits/localStorageData";
 import {setPropertyMarkedToVacancies} from "../../3-UI/u2-assets/utilits/setPropertyMarkedToVacancies";
+import {setSelectedVacanciesDataType} from "2-BLL/selectedVacanciesReducer/selectedVacanciesReducer";
+import {refreshTokenTC} from "../authReucer/authReducer";
 
 const initialState = {
     isLoading: false,
@@ -74,10 +76,16 @@ export const vacanciesReducer = (state: InitialStateType = initialState, action:
         case "job-search/vacancies/setFilters":
             return {
                 ...state,
-                payment_to: action.payment_to!,
-                payment_from: action.payment_from!,
-                keyWord: action.keyword!,
-                jobArea: action.catalogues!,
+                payment_to: action.payment_to,
+                payment_from: action.payment_from,
+                jobArea: action.catalogues,
+                keyWord: action.keyWord,
+                currentPage: 1,
+            }
+        case "job-search/vacancies/setKeyWord":
+            return {
+                ...state,
+                keyWord: action.keyWord,
                 currentPage: 1,
             }
         default:
@@ -87,8 +95,15 @@ export const vacanciesReducer = (state: InitialStateType = initialState, action:
 
 // thunk creators
 
-export const setCatalogueDataTC = (): AppThunk => async (dispatch) => {
+export const setCatalogueDataTC = (): AppThunk => async (dispatch, getState) => {
     dispatch(isLoadingAC(true))
+
+    const token = getState().auth.userAuthData.access_token
+    let ttl = getState().auth.userAuthData.ttl
+    if (ttl && ttl < Date.now()) {
+        dispatch(refreshTokenTC())
+    }
+
     try {
         let res = await vacancyApi.getCatalogues()
         dispatch(setCatalogueDataAC(res.data))
@@ -113,21 +128,31 @@ export const setVacanciesDataTC = (currentPage: number, count: number,): AppThun
     }
 }
 
-export const setFiltredVacanciesDataTC = (currentPage: number, count: number, published?: number, keyword?: string | '', payment_from?: number | '', payment_to?: number | '', catalogues?: string | ''): AppThunk => async (dispatch, getState) => {
+export const setFiltredVacanciesDataTC = (): AppThunk => async (dispatch, getState) => {
     dispatch(isLoadingAC(true))
     const token = getState().auth.userAuthData.access_token
-    const catalogueID = getState().vacancies.catalogueData.find(c => c.title_rus === catalogues)!.key.toString()
+    const {
+        keyWord,
+        currentPage,
+        pageCount: count,
+        payment_from,
+        payment_to,
+        jobArea,
+        catalogueData
+    } = getState().vacancies
+    const catalogueID = catalogueData.find(c => c.title_rus === jobArea) ?
+        catalogueData.find(c => c.title_rus === jobArea)!.key.toString() : ''
+
     try {
         let res = await vacancyApi.getFiltredVacancies(token, {
             currentPage,
             count,
-            published,
-            keyword,
+            published: 1,
+            keyWord,
             payment_from,
             payment_to,
             catalogues: catalogueID
         })
-        dispatch(setFiltersAC(keyword, payment_from, payment_to, catalogues))
         let vacancies = setPropertyMarkedToVacancies(res.data)
         dispatch(setVacanciesDataAC(vacancies))
     } catch (e) {
@@ -177,9 +202,14 @@ export const setPageInfoAC = (page: number) => ({
     page
 } as const)
 
-export const setFiltersAC = (keyword?: string | '', payment_from?: number | '', payment_to?: number | '', catalogues?: string | '') => ({
+export const setFiltersAC = (payment_from: number | '', payment_to: number | '', catalogues: string | '', keyWord: string | '') => ({
     type: 'job-search/vacancies/setFilters',
-    payment_from, payment_to, catalogues, keyword
+    payment_from, payment_to, catalogues, keyWord
+} as const)
+
+export const setKewWordValueAC = (keyWord: string) => ({
+    type: 'job-search/vacancies/setKeyWord',
+    keyWord
 } as const)
 
 
@@ -193,6 +223,8 @@ export type ActionsVacanciesTypes =
     | setVacancyDataType
     | setPageInfoType
     | setFiltersType
+    | setKewWordValueType
+
 
 type isLoadingACType = ReturnType<typeof isLoadingAC>
 type setErrorType = ReturnType<typeof setErrorVacancyAC>
@@ -201,3 +233,4 @@ type setVacanciesDataType = ReturnType<typeof setVacanciesDataAC>
 type setVacancyDataType = ReturnType<typeof setVacancyDataAC>
 type setPageInfoType = ReturnType<typeof setPageInfoAC>
 type setFiltersType = ReturnType<typeof setFiltersAC>
+type setKewWordValueType = ReturnType<typeof setKewWordValueAC>

@@ -74,9 +74,6 @@ export const Login = () => {
                     </Group>
                 </form>
             </Box>
-            <Group position="center" mt="md">
-                <Button disabled={isLoading} onClick={() => dispatch(refreshTokenTC())}>Refresh Token</Button>
-            </Group>
 
             <ErrorComponent errorMessage={error} setError={setErrorAuthAC}/>
 

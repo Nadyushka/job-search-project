@@ -114,5 +114,5 @@ export type ActionsSelectedVacanciesTypes =
 
 type isLoadingACType = ReturnType<typeof isLoadingAC>
 type setErrorType = ReturnType<typeof setErrorSelectedVacancyAC>
-type setSelectedVacanciesDataType = ReturnType<typeof setSelectedVacanciesDataAC>
+export type setSelectedVacanciesDataType = ReturnType<typeof setSelectedVacanciesDataAC>
 
