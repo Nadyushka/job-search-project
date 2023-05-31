@@ -6,8 +6,8 @@ import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComp
 import {VacancyItem} from "../../../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
-    setCatalogueDataTC, setErrorVacancyAC, setFiltersAC,
-    setFiltredVacanciesDataTC, setKewWordValueAC, setPageInfoAC,
+    setCatalogueDataTC, setErrorVacancyAC,
+    setFiltredVacanciesDataTC, setKeyWordValueAC, setPageInfoAC,
     setVacanciesDataTC
 } from "2-BLL/vacancyReducer/vacanciesReducer";
 import {
@@ -39,11 +39,11 @@ export const JobOffers = () => {
     const kewWord = useAppSelector(keyWordVacancies)
     const catalogues = useAppSelector(catalogueDataVacancies)
 
-
     const [activePage, setPage] = useState<number>(1);
     const maxVacancies = 500;
-    const totalPages = totalVacancies > maxVacancies ? maxVacancies / pagesCount : totalVacancies / pagesCount
-    const [kewWordValue, setKewWordValue] = useState<string>(kewWord)
+
+    const totalPages = totalVacancies > maxVacancies ? Math.ceil(maxVacancies / pagesCount) : Math.ceil(totalVacancies / pagesCount)
+    const [keyWordValue, setKeyWordValue] = useState<string>(kewWord)
 
     const {classes, cx} = useStyles();
 
@@ -57,7 +57,7 @@ export const JobOffers = () => {
             dispatch(setCatalogueDataTC())
             dispatch(setVacanciesDataTC(activePage, pagesCount))
         }
-        setKewWordValue(kewWord)
+        setKeyWordValue(kewWord)
         setPage(currentPage)
     }, [activePage, paymentFrom, paymentTo, jobArea, kewWord, currentPage])
 
@@ -65,14 +65,14 @@ export const JobOffers = () => {
         <Container className={classes.jobSearchContainer}>
             {isLoading && <LoaderComponent/>}
             <TextInput className={classes.inputJobName}
-                       value={kewWordValue}
-                       onChange={(e) => setKewWordValue(e.currentTarget.value)}
+                       value={keyWordValue}
+                       onChange={(e) => setKeyWordValue(e.currentTarget.value)}
                        size={'lg'}
                        placeholder="Введите название вакансии"
                        icon={<Search size="1rem"/>}
                        rightSection={
                            <Button size="sm"
-                                   onClick={()=>dispatch(setKewWordValueAC(kewWordValue))}
+                                   onClick={() => dispatch(setKeyWordValueAC(keyWordValue))}
                                    {...useKeyWordDataAttribute}>
                                Поиск
                            </Button>}

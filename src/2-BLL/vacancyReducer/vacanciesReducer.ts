@@ -41,7 +41,7 @@ const initialState = {
         "vacancyRichText": '',
     } as VacancyInfo,
     currentPage: 1,
-    pageCount: 3,
+    pageCount: 4,
     payment_from: '' as number | '',
     payment_to: '' as number | '',
     jobArea: '',
@@ -61,7 +61,8 @@ export const vacanciesReducer = (state: InitialStateType = initialState, action:
         case "job-search/vacancies/setVacanciesData":
             return {
                 ...state,
-                vacanciesData: {...action.vacanciesData, objects: action.vacanciesData.objects.map(v => ({...v}))}
+                vacanciesData: {...action.vacanciesData,
+                    objects: action.vacanciesData.objects.map(v => ({...v}))}
             }
         case "job-search/vacancies/setVacancyData":
             return {
@@ -98,7 +99,6 @@ export const vacanciesReducer = (state: InitialStateType = initialState, action:
 export const setCatalogueDataTC = (): AppThunk => async (dispatch, getState) => {
     dispatch(isLoadingAC(true))
 
-    const token = getState().auth.userAuthData.access_token
     let ttl = getState().auth.userAuthData.ttl
     if (ttl && ttl < Date.now()) {
         dispatch(refreshTokenTC())
@@ -145,15 +145,16 @@ export const setFiltredVacanciesDataTC = (): AppThunk => async (dispatch, getSta
 
     try {
         let res = await vacancyApi.getFiltredVacancies(token, {
-            currentPage,
+            page: currentPage,
             count,
             published: 1,
-            keyWord,
+            keyword:keyWord,
             payment_from,
             payment_to,
             catalogues: catalogueID
         })
         let vacancies = setPropertyMarkedToVacancies(res.data)
+
         dispatch(setVacanciesDataAC(vacancies))
     } catch (e) {
         errorHandler(e, dispatch, setErrorVacancyAC)
@@ -207,7 +208,7 @@ export const setFiltersAC = (payment_from: number | '', payment_to: number | '',
     payment_from, payment_to, catalogues, keyWord
 } as const)
 
-export const setKewWordValueAC = (keyWord: string) => ({
+export const setKeyWordValueAC = (keyWord: string) => ({
     type: 'job-search/vacancies/setKeyWord',
     keyWord
 } as const)
@@ -233,4 +234,4 @@ type setVacanciesDataType = ReturnType<typeof setVacanciesDataAC>
 type setVacancyDataType = ReturnType<typeof setVacancyDataAC>
 type setPageInfoType = ReturnType<typeof setPageInfoAC>
 type setFiltersType = ReturnType<typeof setFiltersAC>
-type setKewWordValueType = ReturnType<typeof setKewWordValueAC>
+type setKewWordValueType = ReturnType<typeof setKeyWordValueAC>

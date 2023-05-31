@@ -23,12 +23,10 @@ export const vacancyApi = {
         return instance.get<ResponseTypeVacancies>('vacancies', {params})
     },
 
-    getFiltredVacancies(token: string, paramData: { currentPage: number, count: number, published?: number, keyWord?: string, payment_from?: number | '', payment_to?: number | '', catalogues?: string }) {
+    getFiltredVacancies(token: string, paramData: { page: number, count: number, published?: number, keyword?: string, payment_from?: number | '', payment_to?: number | '', catalogues?: string }) {
         const params = {
             ...paramData,
             no_agreement: 1,
-            'order_field': 'payment',
-            'order_direction': 'desc',
             'Authorization': `Bearer ${token}`,
         }
         return instance.get<ResponseTypeVacancies>('vacancies', {params})

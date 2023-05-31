@@ -9,12 +9,15 @@ import {
     Title
 } from "@mantine/core";
 import {ChevronDown, ChevronUp} from 'tabler-icons-react';
-import {setFiltersAC, setFiltredVacanciesDataTC, setVacanciesDataTC} from "2-BLL/vacancyReducer/vacanciesReducer";
+import {
+    setFiltersAC,
+    setKeyWordValueAC,
+} from "2-BLL/vacancyReducer/vacanciesReducer";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
     catalogueDataVacancies,
-    currentPageVacancies, jobAreaVacancies, keyWordVacancies,
-    pageCountVacancies, paymentFromVacancies, paymentToVacancies
+    jobAreaVacancies, keyWordVacancies,
+    paymentFromVacancies, paymentToVacancies
 } from "2-BLL/vacancyReducer/vacancySelectors";
 import {useStyles} from './styleFilters';
 
@@ -23,8 +26,6 @@ export const Filters = () => {
     const dispatch = useAppDispatch()
 
     const catalogueDataText = useAppSelector(catalogueDataVacancies).map(catalogue => catalogue['title_rus'])
-    const currentPage = useAppSelector(currentPageVacancies)
-    const count = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
     const paymentTo = useAppSelector(paymentToVacancies)
     const jobArea = useAppSelector(jobAreaVacancies)
@@ -49,6 +50,7 @@ export const Filters = () => {
 
     const onClockClearFiltersButton = () => {
         dispatch(setFiltersAC('', '', '', ''))
+        dispatch(setKeyWordValueAC(''))
     }
 
     useEffect(() => {
