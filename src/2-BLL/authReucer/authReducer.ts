@@ -2,7 +2,6 @@ import {AppThunk} from "../store";
 import {authApi} from "1-DAL/authApi";
 import {errorHandler} from "3-UI/u2-assets/utilits/error";
 
-
 const initialState = {
     isAuthorised: false,
     isLoading: false,
@@ -61,7 +60,6 @@ export const refreshTokenTC = (): AppThunk => async (dispatch, getState) => {
         dispatch(isLoadingAuthAC(false))
     }
 }
-
 
 //actions creators
 

@@ -8,7 +8,6 @@ import {
     selectedVacanciesReducer
 } from "./selectedVacanciesReducer/selectedVacanciesReducer";
 
-
 // store
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -31,7 +30,6 @@ export type AppRootStateType = ReturnType<typeof rootReducer>
 export type AppRootActionsType = ActionsAuthTypes
     | ActionsSelectedVacanciesTypes
     | ActionsVacanciesTypes
-
 
 export type AppThunkDispatchType = ThunkDispatch<AppRootStateType, any, AnyAction>
 export type AppThunk<ReturnType = void> = ThunkAction<

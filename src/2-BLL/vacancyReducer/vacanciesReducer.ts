@@ -213,7 +213,6 @@ export const setKeyWordValueAC = (keyWord: string) => ({
     keyWord
 } as const)
 
-
 // types
 
 export type ActionsVacanciesTypes =
@@ -225,7 +224,6 @@ export type ActionsVacanciesTypes =
     | setPageInfoType
     | setFiltersType
     | setKewWordValueType
-
 
 type isLoadingACType = ReturnType<typeof isLoadingAC>
 type setErrorType = ReturnType<typeof setErrorVacancyAC>

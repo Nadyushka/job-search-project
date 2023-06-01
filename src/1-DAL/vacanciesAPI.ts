@@ -43,7 +43,6 @@ export type ResponseTypeCatalogues = {
     key: number,
 }
 
-
 export type ResponseTypeVacancies = {
     "objects": VacancyInfo[],
     "total": number,
